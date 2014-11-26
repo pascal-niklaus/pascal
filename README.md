@@ -35,10 +35,44 @@ Outputs nicely formatted table.
 
 - heading, trailer, simple.heading, simple.trailer: Convenience functions to provide "nice" outputs
 - Sink, enableSink, disableSink, checkSink: Turn on and off sink()s
+- current_time
 
 ### Plotting
 
 - xy.errbar: Add error bars to your graphics
+
+### Functions
+
+- max_NAsafe, mean_NAsafe, median_NAsafe, min_NAsafe, sd_NAsafe, se_NAsafe, var_NAsafe: convenience replacements for anonymous functions removing NAs
+- NAtozero: return vector with NA and NaNs zeroed
+- finite.only: returns finite values only
+- escape/unescape: escape/unescape specified characters by hex codes
+- logstc: Three-parameter logistic (sigmoidal) function
+- power.posneg, power.posneg.backtransform: power functions, joining different "legs" for positive and negative values
+- safen: safely convert to numeric; works for text and factors 
+- se: standard error (standard deviation of mean)
+- sgnsqrt
+- xtreme: Identify extreme values based on `mad`
+- trim.ws: remove whitespace 
+- sigStars: translate P values to "stars" indicating significance levels
+- suc: short for `sort(unique(as.character(x)))`
+
+### Misc
+
+- close_all: closes all sinks and devices
+- getObjects
+- months.len
+- getResolution: Get screen resolution (uses xrandr, works only under Linux)
+
+### Deprecated
+
+I'll remove these functions eventually, since they are remainings from old code.
+
+- niceDiag: Draw path diagram from sem object, using graphviz
+- indexof
+
+
+
 
 ### Installation
 
