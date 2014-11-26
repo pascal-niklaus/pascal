@@ -40,3 +40,11 @@ Outputs nicely formatted table.
 
 - xy.errbar: Add error bars to your graphics
 
+### Installation
+
+* download the ready-built package from the [pkgs directory](https://github.com/pascal-niklaus/pascal/tree/master/pkgs)
+* use `install_github`:  
+`library(devtools)`  
+`install_github("pascal-niklaus/pascal/pascal")`
+
+
