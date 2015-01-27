@@ -98,8 +98,8 @@ aov.ftest <- function (aovobj, test.formula, table=FALSE)
     p <- pf(F, df1, df2, lower.tail = FALSE)                      ## calculate P-value (F-test)
     s <- ifelse(p<=0.001,"***",ifelse(p<=0.01,"**",ifelse(p<=0.05,"*",ifelse(p<=0.1,".",""))));
     r <- rbind(r,data.frame(nom=trim(nom), den = trim(den), df = df1, ddf = df2, 
-                            SS = sprintf("%.2f", a[nom, "Sum Sq"]), 
-                            MS = sprintf("%.2f", a[nom, "Mean Sq"]),  
+                            SS = sprintf("%.2f", a[nom.row, "Sum Sq"]), 
+                            MS = sprintf("%.2f", a[nom.row, "Mean Sq"]),  
                             F =  sprintf("%.2f", F), P = sprintf("%.3f", 
                             ceiling(1000*p)/1000), s));
     p.values[i]<-p;
