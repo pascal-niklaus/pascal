@@ -72,11 +72,8 @@ aov.ftest <- function (aovobj, test.formula, table=FALSE)
   fixterm <- function(x) {
     sapply(x, function(x) { paste(sort(trim(strsplit(x,":")[[1]])),collapse=":") } )
   }
-  d.save <- options()$digits;
-  options(digits=10);
-  a <- summary(aovobj)[[1]];                            ## extract summary
+  a <- summary(aovobj)[[1]];                        
   rownames(a) <- fixterm(rownames(a));
-  options(digits=d.save);
   if(!is.list(test.formula)) 
     test.formula <- list(test.formula);
   ntests <- length(test.formula);
