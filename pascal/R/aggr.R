@@ -118,7 +118,7 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
 
     rownames(dnew) <- 1:nrow(dnew)    
     for(i in seq(along=faccols)) 
-      dnew[,i]<-factor(unescape(dnew[,i]));
+      dnew[,i]<-factor(unescape(as.character(dnew[,i])));
     return(dnew);
 }
 
