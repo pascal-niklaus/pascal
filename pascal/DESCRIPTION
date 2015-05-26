@@ -1,8 +1,8 @@
 Package: pascal
 Type: Package
 Title: Pascal's library
-Version: 1.1.5
-Date: 2015-04-20
+Version: 1.1.6
+Date: 2015-05-25
 Author: Pascal A. Niklaus
 Maintainer: Pascal A. Niklaus <pascal.niklaus@ieu.uzh.ch>
 Depends: R (>= 3.0.0)

@@ -40,6 +40,8 @@ Outputs nicely formatted table.
 ### Plotting
 
 - xy.errbar: Add error bars to your graphics
+- newpoly/addpoly/flushpoly: intelligently shade area between lines
+- showSymbols: show plot symbols
 
 ### Functions
 
@@ -56,6 +58,8 @@ Outputs nicely formatted table.
 - trim.ws: remove whitespace 
 - sigStars: translate P values to "stars" indicating significance levels
 - suc: short for `sort(unique(as.character(x)))`
+- isect: intersection of lines, with options
+- Sink, enableSink: sink function that can be globally enabled/disabled
 
 ### Misc
 
@@ -70,9 +74,6 @@ I'll remove these functions eventually, since they are remainings from old code.
 
 - niceDiag: Draw path diagram from sem object, using graphviz
 - indexof
-
-
-
 
 ### Installation
 

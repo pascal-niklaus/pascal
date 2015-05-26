@@ -1,28 +1,38 @@
 #' Aggregates a Data Frame
 #' 
-#' \code{aggr} was written as a more generic alternative to \code{\link{aggregate}},
-#' which uses excessive memory if a larger number of factors are given, and which
-#' is restricted to a single summary function.
+#' \code{aggr} was written in 2005 as a more generic alternative to
+#' \code{\link{aggregate}}, which used excessive memory when a larger
+#' number of factors were given, and which is restricted to a single
+#' summary function. Meanwhile, other libraries exist that provide
+#' functions to achieve similar goals, including \code{plyr}.
 #'
-#' The \code{factors} are given as character string and can be given new names
-#' in the aggregated data set. For example, \code{factors=c("f1=factor1","f2=factor2")}
-#' will rename the factors \code{factor1} and \code{factor2} to \code{f1} and \code{f2}.
-#' If no new name is given, the original is kept.
+#' The \code{factors} defining the grouping are given as character
+#' string and can be given new names in the aggregated data set. For
+#' example, \code{factors=c("f1=factor1","f2=factor2")} will rename
+#' the factors \code{factor1} and \code{factor2} to \code{f1} and
+#' \code{f2}.  If no new name is given, the original is kept.
 #'
-#' The summary column defined in \code{newcols} is passed as character vector with
-#' the form \code{new_name=summary_function(old_name)}. Any defined function taking
-#' a numeric vector as argument can be used. 
-#' For example, \code{newcols=c("m.tot=sum(m)","m.avg=mean(m)","n=length(m)")} will 
-#' compute the sum, average and number of data in \code{m} for all factor combinations and
-#' return them under the names \code{m.tot}, \code{m.avg} and \code{n}.
-#' The R code given is not fully parsed; instead, any name enclosed in parenthesis
-#' (without whitespace) is treated as column name (textual replacement). 
-#' This allows for terms such as \code{newcols=c("m.tot=sum((m),na.rm=T)")}.
-#' As a trade-off, \code{newcols=c("m.tot=sum(( m ),na.rm=T)")} will not work
-#' because there is whitespace around the variable name \code{m}. This can be
-#' used to distinguish between column names and other variables defined in the scope
-#' in which \code{aggr} is executed.
+#' The summary column defined in \code{newcols} is passed as character
+#' vector with the form
+#' \code{new_name=summary_function(old_name)}. Any defined function
+#' taking a numeric vector as argument can be used.  For example,
+#' \code{newcols=c("m.tot=sum(m)","m.avg=mean(m)","n=length(m)")} will
+#' compute the sum, average and number of data in \code{m} for all
+#' factor combinations and return them under the names \code{m.tot},
+#' \code{m.avg} and \code{n}.  The R code given is not fully parsed;
+#' instead, any name enclosed in parenthesis (without whitespace) is
+#' treated as column name (textual replacement).  This allows for
+#' terms such as \code{newcols=c("m.tot=sum((m),na.rm=T)")}.  As a
+#' trade-off, \code{newcols=c("m.tot=sum(( m ),na.rm=T)")} will not
+#' work because there is whitespace around the variable name
+#' \code{m}. This can be used to distinguish between column names and
+#' other variables defined in the scope in which \code{aggr} is
+#' executed.
 #'
+#' If the package \code{parallel} is installed, some computations
+#' are parallelized, using all available processor cores available.
+#' However, the performance gains is small for simple summary functions.
+#' 
 #' @param d Source data frame containing the data set to aggregate
 #' @param factors Character vector containing the names of the factors that
 #'                define the categories in the aggregated data set
@@ -32,7 +42,6 @@
 #'               all combinations of the supplied factors, even if these are
 #'               not present in the original data frame
 #' @return Data frame containing the aggregated data
-#'
 #'
 #' @seealso \code{\link{aggregate}} 
 #' @examples
@@ -79,29 +88,50 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
 aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
-    # extract factor names
+    parallel <- require(parallel)
+    n.cores <- if(parallel) detectCores() else 1; 
+
+    ## extract factor names
     facnames    <- sapply(factors,function(x) rev(unlist(strsplit(x,"=")))[1])
     facnewnames <- sapply(factors,function(x) unlist(strsplit(x,"="))[1])
 
-    # extract column indices of factors that will be used... will need them later
+    ## extract column indices of factors that will be used... will need them later
     faccols <- sapply(facnames,function(x) which(names(d)==x))
-    for(i in faccols) { d[,i] <- as.character(d[,i]); }
-    levs    <- apply(as.matrix(d[,faccols]),1,function(x) { paste(escape(x),collapse=":") })
 
-    # create factor skeleton
+    ## make sure categories are factors, since numberic equivalent is used later
+    for(i in faccols)
+        if(! is.factor(d[,i]))
+            d[,i] <- as.factor(d[,i])
+
+    levs <- apply(as.data.frame(lapply(d[,faccols],
+                                       function(x) as.integer(x))),
+                  1,
+                  function(x) paste(sprintf("%04d",x),collapse=":"))       
+    
+    ## create factor skeleton
     if(expand) {
-        faclist <- lapply(faccols,function(x) { escape(sort(unique(as.character(d[,x])))) });
+        faclist <- lapply(faccols,
+                          function(x) {
+                              sort(unique(as.integer(d[,x]))) });
         attr(faclist,"names") <- facnewnames;
         dnew <- expand.grid(faclist);
     } else {
         lev <- sort(unique(as.character(levs)))
-        if(length(faccols)==1)        # need to treat single factor case separately (vector/matrix)
+        if(length(faccols)==1)
             dnew <- data.frame(lev) 
         else
             dnew <- data.frame(unname(t(sapply(lev,function(x) { unlist(strsplit(x,":")) }))));
         colnames(dnew)<-facnewnames;
     }
-    rownames(dnew)<-apply(dnew,1,function(x) { paste(x,collapse=":") })    
+    rownames(dnew)<-apply(dnew,
+                          1,
+                          function(x) {
+                              paste(sprintf("%04d",as.integer(x)),
+                                    collapse=":") })    
+
+    ## replace codes by factor levels
+    for(i in seq_along(faccols)) 
+        dnew[,i] <- factor(levels(d[[faccols[i]]])[as.integer(as.character(dnew[,i]))])
     
     eqpos = sapply(newcols,function(x) attr(regexpr("[^=]+=",x),"match.length") )
 
@@ -110,16 +140,27 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
 
     funcpart <- gsub("\\(([A-Za-z0-9._]+)\\)","(d$\\1[levs==x])",funcpart,perl=TRUE);
 
-    for(i in 1:length(newcols)) {        
-        cmd <- paste("dnew$",newnames[i]," <- ",
-            "sapply(rownames(dnew),function(x) { ",funcpart[i]," } )",sep="");
-        eval(parse(text=cmd));
+    ## calculate aggregated column data
+    ## uses parallelization if package 'parallel' is installed 
+    for(i in 1:length(newcols)) {
+        cmd <- if(parallel)
+                   paste("dnew$",newnames[i]," <- ",
+                         "mcmapply(function(x) { ",
+                         funcpart[i],
+                         " },rownames(dnew),USE.NAMES=FALSE,mc.cores=",
+                         n.cores,
+                         ")",
+                         sep="")
+               else
+                   paste("dnew$",newnames[i]," <- ",
+                         "sapply(rownames(dnew),function(x) { ",
+                         funcpart[i],
+                         " } )",
+                         sep="")
+        eval(parse(text=cmd))
     }
 
-    rownames(dnew) <- 1:nrow(dnew)    
-    for(i in seq(along=faccols)) 
-      dnew[,i]<-factor(unescape(as.character(dnew[,i])));
-    return(dnew);
+    ## fix rownames
+    rownames(dnew) <- NULL
+    return(dnew)
 }
-
-
