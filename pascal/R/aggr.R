@@ -189,7 +189,6 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
                          funcpart[i],
                          " } )",
                          sep="")
-        cat("cmd=<",cmd,">\n")
         eval(parse(text=cmd))
     }
 
