@@ -92,18 +92,27 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
     n.cores <- if(parallel) detectCores() else 1; 
 
     ## extract factor names
-    facnames    <- sapply(factors,function(x) rev(unlist(strsplit(x,"=")))[1])
-    facnewnames <- sapply(factors,function(x) unlist(strsplit(x,"="))[1])
+    facnames    <- sapply(factors,
+                          function(x) rev(unlist(strsplit(x,"=")))[1])
+    facnewnames <- sapply(factors,
+                          function(x) unlist(strsplit(x,"="))[1])
 
+    if(! all ( facnames %in% names(d) ))
+       stop("Grouping factor(s) ",
+            paste("'",facnames[ ! facnames %in% names(CO2) ],"'",
+                  sep='',collapse=', '),
+            " is/are not part of the data frame")
+    
     ## extract column indices of factors that will be used... will need them later
-    faccols <- sapply(facnames,function(x) which(names(d)==x))
+    faccols <- sapply(facnames,
+                      function(x) which(names(d)==x) )
 
     ## make sure categories are factors, since numberic equivalent is used later
     for(i in faccols)
         if(! is.factor(d[,i]))
             d[,i] <- as.factor(d[,i])
 
-    levs <- apply(as.data.frame(lapply(d[,faccols],
+    levs <- apply(as.data.frame(lapply(d[,faccols,drop=FALSE],
                                        function(x) as.integer(x))),
                   1,
                   function(x) paste(sprintf("%04d",x),collapse=":"))       
@@ -112,16 +121,23 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
     if(expand) {
         faclist <- lapply(faccols,
                           function(x) {
-                              sort(unique(as.integer(d[,x]))) });
-        attr(faclist,"names") <- facnewnames;
-        dnew <- expand.grid(faclist);
+                              sort(unique(as.integer(d[,x]))) })
+        attr(faclist,"names") <- facnewnames
+        dnew <- expand.grid(faclist)
     } else {
         lev <- sort(unique(as.character(levs)))
+        ## single factor case needs to be treated separately because
+        ## strsplit does not return a list if no separator is detected
         if(length(faccols)==1)
             dnew <- data.frame(lev) 
         else
-            dnew <- data.frame(unname(t(sapply(lev,function(x) { unlist(strsplit(x,":")) }))));
-        colnames(dnew)<-facnewnames;
+            dnew <- data.frame(
+                unname(
+                    t(
+                        sapply(lev,
+                               function(x) { unlist(strsplit(x,":")) })
+                        )))
+        colnames(dnew)<-facnewnames
     }
     rownames(dnew)<-apply(dnew,
                           1,
@@ -131,14 +147,30 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
 
     ## replace codes by factor levels
     for(i in seq_along(faccols)) 
-        dnew[,i] <- factor(levels(d[[faccols[i]]])[as.integer(as.character(dnew[,i]))])
+        dnew[,i] <- factor(
+            levels( d[[ faccols[i] ]])[ as.integer( as.character(dnew[,i]) ) ] )
     
-    eqpos = sapply(newcols,function(x) attr(regexpr("[^=]+=",x),"match.length") )
+    eqpos <- sapply(newcols,
+                    function(x) attr(regexpr("[^=]+=",x),"match.length") )
 
-    newnames <- substr(newcols,1,eqpos-1);
-    funcpart <- substr(newcols,eqpos+1,nchar(newcols));
+    newnames <- substr( newcols, 1, eqpos-1 );
+    funcpart <- substr( newcols, eqpos + 1, nchar(newcols) );
 
-    funcpart <- gsub("\\(([A-Za-z0-9._]+)\\)","(d$\\1[levs==x])",funcpart,perl=TRUE);
+    ## check that all variables are in data frame...
+    ## leads to less cryptic error messages
+    ynames <- gsub("^.*\\(([^,\\) ]+)\\).*$","\\1",funcpart,perl=TRUE)
+
+    if(! all ( ynames %in% names(d) ))
+       stop("Variable ",
+            paste("'",ynames[ ! ynames %in% names(CO2) ],"'",
+                  sep='',collapse=', '),
+            " is/are not part of the data frame")
+
+    ## modify expressions to contain grouping
+    funcpart <- gsub("\\(([^,\\(\\) ]+)\\)",
+                     "(d$\\1[levs==x])",
+                     funcpart,
+                     perl=TRUE);
 
     ## calculate aggregated column data
     ## uses parallelization if package 'parallel' is installed 
@@ -157,6 +189,7 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
                          funcpart[i],
                          " } )",
                          sep="")
+        cat("cmd=<",cmd,">\n")
         eval(parse(text=cmd))
     }
 
