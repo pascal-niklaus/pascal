@@ -97,29 +97,51 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @keywords manip datagen utilities misc
 #' @export
-stck <- function(d,factors=NULL,covars=NULL,to.stack, cat.names=NULL, expand=FALSE) {
-    # extract factor names 
-    facnames    <- sapply(factors,function(x) rev(unlist(strsplit(x,"=")))[1])
-    facnewnames <- sapply(factors,function(x) unlist(strsplit(x,"="))[1])
+stck <- function(d, factors=NULL, covars=NULL, to.stack, cat.names=NULL, expand=FALSE)
+{
+    ## extract factor names 
+    facnames    <- sapply(
+        factors,
+        function(x)
+            rev(unlist(strsplit(x,"="),use.names=FALSE))[1]
+        )
+    facnewnames <- sapply(
+        factors,
+        function(x)
+            unlist(strsplit(x,"="),use.names=FALSE)[1])
 
-    # extract column indices of factors that will be used... will need that later
-    faccols <- sapply(facnames,function(x) which(names(d)==x))
-    levs    <- apply(as.matrix(d[,faccols]),1,function(x) { paste(x,collapse=":") })
+    ## extract column indices of factors that will be used... will need that later
+    faccols <- match(facnames, names(d))
+    levs    <- apply(
+        as.matrix(d[,faccols]),
+        1,
+        function(x)
+            paste(x,collapse=":")
+        )
 
-    # if factor combination is not unique to row --> add temporary row number
-    rownadded<-FALSE;
+    ## if factor combination is not unique to row --> add temporary row number
+    rownadded <- FALSE;
     if(length(levs)!=length(unique(levs))) {
-      d$..n..stck.. <- 1:nrow(d);
-      facnames<-c("..n..stck..",facnames);
-      facnewnames<-c("..n..stck..",facnewnames);
-      rownadded<-T;
-      faccols <- sapply(facnames,function(x) which(names(d)==x))
-      levs    <- apply(as.matrix(d[,faccols]),1,function(x) { paste(x,collapse=":") })
+        d$..n..stck.. <- 1:nrow(d);
+        facnames <- c("..n..stck..",facnames);
+        facnewnames < -c("..n..stck..",facnewnames);
+        rownadded < -T;
+        faccols <- match( facnames, names(d))
+        levs    <- apply(
+            as.matrix(d[,faccols]),
+            1,
+            function(x)
+                paste(x,collapse=":")
+            )
     }
 
-    # create factor skeleton
+    ## create factor skeleton
     if(expand) {
-        faclist <- lapply(faccols,function(x) { sort(unique(d[,x])) });
+        faclist <- lapply(
+            faccols,
+            function(x)
+                sort(unique(d[,x]))
+            )
         attr(faclist,"names") <- facnewnames;
         dnew <- expand.grid(faclist);
     } else {
@@ -127,59 +149,115 @@ stck <- function(d,factors=NULL,covars=NULL,to.stack, cat.names=NULL, expand=FAL
         if(length(faccols)==1)       # need to treat single factor case separately (vector/matrix)
             dnew <- data.frame(lev) 
         else
-            dnew <- data.frame(t(unname(sapply(lev,function(x) { unlist(strsplit(x,":")) }))));
-        colnames(dnew)<-facnewnames;
+            dnew <- data.frame(
+                t(
+                    sapply(
+                        lev,
+                        function(x)
+                            unlist(strsplit(x,":"), use.names=FALSE)
+                        )
+                    )
+                )
+        colnames(dnew) <- facnewnames;
     }
-    rownames(dnew)<-apply(dnew,1,function(x) { paste(x,collapse=":") })
+    rownames(dnew) <- apply(
+        dnew,
+        1,
+        function(x)
+            paste(x,collapse=":")
+        )
 
-    # add covariable columns one by one
+    ## add covariable columns one by one
     if(!is.null(covars)) {
-        covarnames    <- sapply(covars,function(x) rev(unlist(strsplit(x,"=")))[1])
-        covarnewnames <- sapply(covars,function(x) unlist(strsplit(x,"="))[1])
+        covarnames    <- sapply(
+            covars,
+            function(x)
+                rev(unlist(strsplit(x,"="),use.names=FALSE))[1],
+            USE.NAMES=FALSE
+            )
+        covarnewnames <- sapply(
+            covars,
+            function(x)
+                unlist(strsplit(x,"="),use.names=FALSE)[1]
+            )
 
         for(i in 1:length(covarnewnames)) {
             cmd <- paste("dnew$",covarnewnames[i]," <- ",
-                "sapply(rownames(dnew),function(x) { d$",covarnames[i],"[levs==x] } )",sep="");
+                "sapply(rownames(dnew),function(x) d$",covarnames[i],"[levs==x], USE.NAMES=FALSE )",sep="");
             eval(parse(text=cmd));
         }
     }
 
-    # extract all factors
-    tostack.names <- sapply(to.stack,function(x) unlist(strsplit(x,"="))[1]);
-    tmp <- sapply(to.stack,function(x) rev(unlist(strsplit(x,"=")))[1]);
-    tostack.vars  <- apply(as.array(tmp),1,function(x) { return(unlist(strsplit(x,","))) });
-    colnames(tostack.vars)<-tostack.names;
+    ## extract all factors
+    tostack.names <- sapply(
+        to.stack,
+        function(x)
+            unlist(strsplit(x,"="),use.names=FALSE)[1],
+        USE.NAMES=FALSE
+        )
+    tmp <- sapply(
+        to.stack,
+        function(x)
+            rev(unlist(strsplit(x,"="),use.names=FALSE))[1]
+        )
+    tostack.vars  <- apply(
+        as.array(tmp),
+        1,
+        function(x)
+            unlist(strsplit(x,","),use.names=FALSE)
+        )
+    colnames(tostack.vars) <- tostack.names
 
     if(is.null(cat.names)) {
-      catcolname <- "group";
-      catcolvals <-  tostack.vars[,1];
+      catcolname <- "group"
+      catcolvals <-  tostack.vars[,1]
     } else {
-       catcolname <- unlist(strsplit(cat.names,"="))[1];
+       catcolname <- unlist(strsplit(cat.names,"="),use.names=FALSE)[1]
        if(length(unlist(strsplit(cat.names,"=")))==2) {
-           catcolvals <- trim.ws(unlist(strsplit(rev(unlist(strsplit(cat.names,"=")))[1],",")));
+           catcolvals <- trim.ws(
+               unlist(
+                   strsplit(
+                       rev(
+                           unlist(
+                               strsplit(cat.names,"="),
+                               use.names=FALSE))[1],
+                       ","),
+                   use.names=FALSE)
+               )
            if(length(catcolvals) != nrow(tostack.vars))
-             stop("number of values in cat.names vector does not correspond to number of categories defined by factors");
+               stop("number of values in cat.names vector does not ",
+                    "correspond to number of categories defined by factors");
        } else
            stop("Ill-specified cat.names");
     } 
         
     for(r in 1:nrow(tostack.vars)) { # loop over no of blocks to stack
-        cmd <- paste("dnew$",catcolname," <- as.factor(\"",catcolvals[r],"\")",sep="");
+        cmd <- paste("dnew$",
+                     catcolname,
+                     " <- as.factor(\"",
+                     catcolvals[r],
+                     "\")",
+                     sep="")
         eval(parse(text=cmd))
         for(v in 1:length(tostack.names)) { # loop over no of vars to stack
-            cmd <- paste("dnew$",tostack.names[v]," <- ",
-                "sapply(rownames(dnew),function(x) { d$",tostack.vars[r,v],"[levs==x] } )",sep="");
+            cmd <- paste("dnew$",
+                         tostack.names[v],
+                         " <- ",
+                         "sapply(rownames(dnew),function(x) { d$",
+                         tostack.vars[r,v],
+                         "[levs==x] } )",
+                         sep="")
             eval(parse(text=cmd))
         }
         if(r==1)
-            dnewframe<-dnew
+            dnewframe <- dnew
         else
-            dnewframe<-rbind(dnewframe,dnew);
+            dnewframe <- rbind(dnewframe,dnew);
     }
 
     rownames(dnewframe) <- 1:nrow(dnewframe)
     if(rownadded)
-       dnewframe<-dnewframe[,-which(names(dnewframe)=="..n..stck..")];       
-    return(dnewframe);
+       dnewframe <- dnewframe[, -which(names(dnewframe)=="..n..stck..")]
+    dnewframe
 }
 

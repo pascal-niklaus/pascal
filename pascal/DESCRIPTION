@@ -1,11 +1,11 @@
 Package: pascal
 Type: Package
 Title: Pascal's library
-Version: 1.1.6
-Date: 2015-05-25
+Version: 1.3
+Date: 2015-10-19
 Author: Pascal A. Niklaus
 Maintainer: Pascal A. Niklaus <pascal.niklaus@ieu.uzh.ch>
 Depends: R (>= 3.0.0)
-Suggests: MASS
-Description: Pascal's collection of functions
+Suggests: MASS, parallel, asreml
+Description: Pascal's collection of functions.
 License: GPL (>=2)
