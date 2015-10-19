@@ -88,14 +88,14 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
 aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
-    parallel <- require(parallel)
-    n.cores <- if(parallel) detectCores() else 1; 
+    parallel <- requireNamespace("parallel")
+    n.cores <- if(parallel) parallel::detectCores() else 1; 
 
     ## extract factor names
     facnames    <- sapply(factors,
-                          function(x) rev(unlist(strsplit(x,"=")))[1])
+                          function(x) rev(unlist(strsplit(x,"="),use.names=FALSE))[1])
     facnewnames <- sapply(factors,
-                          function(x) unlist(strsplit(x,"="))[1])
+                          function(x) unlist(strsplit(x,"="),use.names=FALSE)[1])
 
     if(! all ( facnames %in% names(d) ))
        stop("Grouping factor(s) ",
@@ -104,14 +104,15 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
             " is/are not part of the data frame")
     
     ## extract column indices of factors that will be used... will need them later
-    faccols <- sapply(facnames,
-                      function(x) which(names(d)==x) )
+    faccols <- match( facnames, names(d) )
 
-    ## make sure categories are factors, since numberic equivalent is used later
+    ## make sure categories are factors, since numberic level codes used later
     for(i in faccols)
         if(! is.factor(d[,i]))
             d[,i] <- as.factor(d[,i])
 
+    ## until 9999 levels, the factor order is preserved in the results
+    ## above that, the results are still correct but not ordered...
     levs <- apply(as.data.frame(lapply(d[,faccols,drop=FALSE],
                                        function(x) as.integer(x))),
                   1,
@@ -132,12 +133,11 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
             dnew <- data.frame(lev) 
         else
             dnew <- data.frame(
-                unname(
-                    t(
-                        sapply(lev,
-                               function(x) { unlist(strsplit(x,":")) })
-                        )))
-        colnames(dnew)<-facnewnames
+                      t(  sapply(lev,
+                                 function(x) {
+                                     unlist(strsplit(x,":"), use.names=FALSE) })
+                    ))
+        colnames(dnew) <- facnewnames
     }
     rownames(dnew)<-apply(dnew,
                           1,
@@ -177,7 +177,7 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
     for(i in 1:length(newcols)) {
         cmd <- if(parallel)
                    paste("dnew$",newnames[i]," <- ",
-                         "mcmapply(function(x) { ",
+                         "parallel::mcmapply(function(x) { ",
                          funcpart[i],
                          " },rownames(dnew),USE.NAMES=FALSE,mc.cores=",
                          n.cores,

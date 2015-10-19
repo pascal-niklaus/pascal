@@ -60,6 +60,9 @@ Outputs nicely formatted table.
 - suc: short for `sort(unique(as.character(x)))`
 - isect: intersection of lines, with options
 - Sink, enableSink: sink function that can be globally enabled/disabled
+- getDist: extract distances from triangular distance matrices
+- Zr: Z transformation
+- cloglog and invcloglog: complementary log log and its inverse
 
 ### Misc
 

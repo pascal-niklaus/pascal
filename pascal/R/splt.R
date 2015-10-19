@@ -109,19 +109,34 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @keywords manip datagen utilities misc
 #' @export
-splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE) {
+splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
+{
     # extract factor names
     if(!is.null(factors)) {
-        facnames    <- sapply(factors,function(x) rev(unlist(strsplit(x,"=")))[1])
-        facnewnames <- sapply(factors,function(x) unlist(strsplit(x,"="))[1])
+        facnames    <- sapply(
+            factors,
+            function(x)
+                rev(unlist(strsplit(x,"="),use.names=FALSE))[1]
+            )
+        facnewnames <- sapply(
+            factors,
+            function(x)
+                unlist(strsplit(x,"="),use.names=FALSE)[1]
+            )
 
         # extract column indices of factors that will be used... will need that later
-        faccols <- sapply(facnames,function(x) which(names(d)==x))
-        if(length(unlist(faccols))!=length(faccols))
+        faccols <- match(facnames, names(d))
+        if( any( is.na(faccols) ) )
             stop("splt: Non-existing column specified in 'factors'");
         if(length(faccols)!=0) {
-            for(i in faccols) { d[,i] <- as.character(d[,i]); }
-            levs <- apply(as.matrix(d[,faccols]),1,function(x) { paste(x,collapse=":") })
+            for(i in faccols) 
+                d[,i] <- as.character(d[,i]) 
+            levs <- apply(
+                as.matrix(d[,faccols]),
+                1,
+                function(x) 
+                    paste(x,collapse=":")
+                )
         }
     } else {
         faccols <- c();
@@ -131,45 +146,80 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE) {
     }
 
     bynames     <- by;
-    bycols      <- sapply(bynames,function(x) which(names(d)==x));
+    bycols      <- sapply(bynames,function(x) which(names(d)==x),USE.NAMES=FALSE);
 
     if(length(unlist(bycols))!=length(bycols))
         stop("splt: Non-existing column specified in 'by'");
 
-    bylevs  <- apply(as.matrix(d[,c(bycols)]),1,function(x) { paste(x,collapse=":") });
-    alllevs <- apply(as.matrix(d[,c(bycols,faccols)]),1,function(x) { paste(x,collapse=":") });
+    bylevs  <- apply(
+        as.matrix(d[,c(bycols)]),
+        1,
+        function(x)
+            paste(x,collapse=":")
+        )
+    
+    alllevs <- apply(
+        as.matrix(d[,c(bycols,faccols)]),
+        1,
+        function(x)
+            paste(x,collapse=":")
+        )
 
     rownadded<-F;
     if(length(alllevs) != length(unique(alllevs))) {
       warning("splt: by and factors do not specify rows unequivocally");
       # add helper function that lists the # of repeats in each group
-      rownadded<-TRUE;
-      d$..n..splt..[order(alllevs)] <- unlist(lapply(unique(alllevs),function(x) { return (1:length(which(alllevs==x))) } ));
-      facnames<-c("..n..splt..",facnames);
-      facnewnames<-c("..n..splt..",facnewnames);
-      faccols <- sapply(facnames,function(x) which(names(d)==x));
-      alllevs <- apply(as.matrix(d[,c(bycols,faccols)]),1,function(x) { paste(x,collapse=":") });
-      levs    <- apply(as.matrix(d[,faccols]),1,function(x) { paste(x,collapse=":") });
+      rownadded <- TRUE;
+      d$..n..splt..[order(alllevs)] <- unlist( lapply( unique(alllevs),
+                                                      function(x) 1:length(which(alllevs==x))),
+                                               use.names=FALSE)
+      facnames    <- c("..n..splt..",facnames);
+      facnewnames <- c("..n..splt..",facnewnames);
+      faccols     <- match( facnames, names(d) )
+      alllevs     <- apply(
+          as.matrix( d[,c(bycols,faccols)]),
+          1,
+          function(x) paste(x,collapse=":")
+          )
+      levs        <- apply(
+          as.matrix( d[,faccols]),
+          1,
+          function(x) paste(x,collapse=":")
+          )
     }
 
     # create factor skeleton
     if(expand) {
-        faclist <- lapply(faccols,function(x) { sort(unique(d[,x])) });
-        attr(faclist,"names") <- facnewnames;
-        dnew <- expand.grid(faclist);
+        faclist <- lapply(
+            faccols,
+            function(x) sort(unique(d[,x]))
+            )
+        attr( faclist, "names" ) <- facnewnames;
+        dnew <- expand.grid( faclist );
     } else {
-        lev <- sort(unique(levs));   # unique
-        if(length(faccols)==1)        # need to treat single factor case separately (vector/matrix)
+        lev <- sort( unique(levs) )  # unique
+        if(length(faccols)==1)       # need to treat single factor case separately (vector/matrix)
             dnew <- data.frame(lev) 
         else
-            dnew <- data.frame(t(unname(sapply(lev,function(x) { unlist(strsplit(x,":")) }))))
-        colnames(dnew)<-facnewnames;
+            dnew <- data.frame(t(sapply(lev,
+                                        function(x)
+                                            unlist(strsplit(x,":"),
+                                                   use.names=FALSE),
+                                        USE.NAMES=FALSE)
+                                 )
+                               )
+        colnames(dnew) <- facnewnames;
     }
-    rownames(dnew)<-apply(dnew,1,function(x) { paste(x,collapse=":") })
+    rownames(dnew) <- apply(
+        dnew,
+        1,
+        function(x)
+            paste(x,collapse=":")
+        )
 
     for(v in to.split) { # loop over no of vars to stack
       v.old <- rev(unlist(strsplit(v,"=")))[1]
-      v.new <- (unlist(strsplit(v,"=")))[1]
+      v.new <- (unlist(strsplit(v,"="),use.names = FALSE))[1]
       b.vec <- sort(unique(bylevs))
       if(is.null(new.names))
           b.newnames <- b.vec
@@ -181,14 +231,21 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE) {
          stop("splt: number of names passed in 'new.names' is unequal to the number of groups defined by 'by'.");
 
       for(b.index in 1:length(b.vec)) { # loop over no of blocks to split
-          cmd <- paste("dnew$",v.new,".",gsub(":","_",b.newnames[b.index],fixed=T)," <- ",
-                       "sapply(rownames(dnew),function(x) { c(d$",v.old,"[levs==x & bylevs==b.vec[b.index]],NA)[1]; } )",sep="");
+          cmd <- paste("dnew$",
+                       v.new,
+                       ".",
+                       gsub(":","_",b.newnames[b.index],fixed=T),
+                       " <- ",
+                       "sapply(rownames(dnew),function(x) { c(d$",
+                       v.old,
+                       "[levs==x & bylevs==b.vec[b.index]],NA)[1]; } )",
+                       sep="")
           eval(parse(text=cmd))
       }
     }
 
     rownames(dnew) <- 1:nrow(dnew)
     if(rownadded)
-       dnew<-dnew[,-which(names(dnew)=="..n..splt..")];       
-    return(dnew);
+       dnew<-dnew[,-which(names(dnew)=="..n..splt..")]
+    dnew
 }
