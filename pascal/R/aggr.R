@@ -158,11 +158,20 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
 
     ## check that all variables are in data frame...
     ## leads to less cryptic error messages
-    ynames <- gsub("^.*\\(([^,\\) ]+)\\).*$","\\1",funcpart,perl=TRUE)
+    ynames <- unlist(
+        lapply(funcpart,
+               function(f) {
+                   m <- gregexpr("(?<=\\()[^\\(\\), ]+(?=\\))",f,perl=TRUE)[[1]]
+                   sapply(which(m>0),
+                          function(n) {
+                              substr(f,m[n],m[n]-1+attr(m,"match.length")[n])
+                          })
+               }))
 
+    
     if(! all ( ynames %in% names(d) ))
        stop("Variable ",
-            paste("'",ynames[ ! ynames %in% names(CO2) ],"'",
+            paste("'",ynames[ ! ynames %in% names(d) ],"'",
                   sep='',collapse=', '),
             " is/are not part of the data frame")
 

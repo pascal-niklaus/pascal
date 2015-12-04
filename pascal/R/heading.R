@@ -1,7 +1,9 @@
+#' Functions XX to print nice headings and trailers
+#'
+#' This collection of function is used to print ASCII frames and ``banners''.
+#' 
 #' @name headingtrailer
 #' @rdname headingtrailer
-#'
-#' @title Functions to print nice headings and trailer/footers
 #'
 #' @param txt A vector or list of strings that are to be printed in the heading or trailer.
 #'            Each element is printed on a separate line

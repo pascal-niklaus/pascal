@@ -43,7 +43,7 @@ escape <- function(x, to.escape=":")
   }
 }
 
-#' @title Unescape special sequences in strings
+#' Unescape special sequences in strings
 #'
 #' This is the inverse function of escape.
 #'
