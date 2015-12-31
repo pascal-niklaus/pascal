@@ -1,4 +1,4 @@
-#' Functions XX to print nice headings and trailers
+#' Functions to print nice headings and trailers
 #'
 #' This collection of function is used to print ASCII frames and ``banners''.
 #' 

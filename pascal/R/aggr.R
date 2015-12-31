@@ -29,9 +29,10 @@
 #' other variables defined in the scope in which \code{aggr} is
 #' executed.
 #'
-#' If the package \code{parallel} is installed, some computations
-#' are parallelized, using all available processor cores available.
-#' However, the performance gains is small for simple summary functions.
+#' If the package \code{parallel} is installed, some computations are
+#' parallelized on platforms other than Windows, using all available
+#' processor cores available.  However, the performance gains is small
+#' for simple summary functions.
 #' 
 #' @param d Source data frame containing the data set to aggregate
 #' @param factors Character vector containing the names of the factors that
@@ -88,7 +89,7 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
 aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
-    parallel <- requireNamespace("parallel")
+    parallel <- (Sys.info()["sysname"]!="Windows") && requireNamespace("parallel")
     n.cores <- if(parallel) parallel::detectCores() else 1; 
 
     ## extract factor names

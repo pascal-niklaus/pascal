@@ -63,6 +63,9 @@ Outputs nicely formatted table.
 - getDist: extract distances from triangular distance matrices
 - Zr: Z transformation
 - cloglog and invcloglog: complementary log log and its inverse
+- killfactors: remove `factor' property from data frame column
+- combn2: create combinations with or without replacement
+- binvar: variance of "binned" data
 
 ### Misc
 
