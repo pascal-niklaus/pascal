@@ -65,6 +65,7 @@ Outputs nicely formatted table.
 - cloglog and invcloglog: complementary log log and its inverse
 - killfactors: remove `factor' property from data frame column
 - combn2: create combinations with or without replacement
+- sorted.code: create unique, unambiguous codes from lists, e.g. communities from species composition 
 - binvar: variance of "binned" data
 
 ### Misc
