@@ -31,7 +31,7 @@
 #'
 #' If the package \code{parallel} is installed, some computations are
 #' parallelized on platforms other than Windows, using all available
-#' processor cores available.  However, the performance gains is small
+#' processor cores.  However, the performance gain is small
 #' for simple summary functions.
 #' 
 #' @param d Source data frame containing the data set to aggregate
@@ -42,6 +42,8 @@
 #' @param expand Logical flag: if TRUE, the resulting data frame will contain
 #'               all combinations of the supplied factors, even if these are
 #'               not present in the original data frame
+#' @param keep.numerics Logical flag: if TRUE, numeric columns defining the grouping
+#'               will be kept numeric in the aggregated data, i.e. not converted to a factor
 #' @return Data frame containing the aggregated data
 #'
 #' @seealso \code{\link{aggregate}} 
@@ -88,7 +90,7 @@
 #' 
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
+aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
     parallel <- (Sys.info()["sysname"]!="Windows") && requireNamespace("parallel")
     n.cores <- if(parallel) parallel::detectCores() else 1; 
 
@@ -107,7 +109,11 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
     ## extract column indices of factors that will be used... will need them later
     faccols <- match( facnames, names(d) )
 
-    ## make sure categories are factors, since numberic level codes used later
+    ## remember which columns are numeric
+    facnum <- sapply(faccols,
+                     function(i) is.numeric(d[,i]))
+    
+    ## make sure categories are factors, since numeric level codes used later
     for(i in faccols)
         if(! is.factor(d[,i]))
             d[,i] <- as.factor(d[,i])
@@ -150,6 +156,12 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
     for(i in seq_along(faccols)) 
         dnew[,i] <- factor(
             levels( d[[ faccols[i] ]])[ as.integer( as.character(dnew[,i]) ) ] )
+
+    ## restore numeric values if requested
+    if(keep.numerics)
+        for(i in seq_along(facnum))
+            if(facnum[i]) 
+                dnew[,i] <- safen(dnew[,i])    
     
     eqpos <- sapply(newcols,
                     function(x) attr(regexpr("[^=]+=",x),"match.length") )
@@ -168,7 +180,6 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
                               substr(f,m[n],m[n]-1+attr(m,"match.length")[n])
                           })
                }))
-
     
     if(! all ( ynames %in% names(d) ))
        stop("Variable ",
@@ -204,5 +215,5 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE) {
 
     ## fix rownames
     rownames(dnew) <- NULL
-    return(dnew)
+    dnew
 }

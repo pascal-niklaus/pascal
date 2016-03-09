@@ -2,9 +2,15 @@
 % Please edit documentation in R/logstc.R
 \name{logstc}
 \alias{logstc}
+\alias{logstc.der}
+\alias{logstc.der2}
 \title{Logistic function}
 \usage{
 logstc(x, a = 1, b = 1, tau = 1)
+
+logstc.der(x, a = 1, b = 1, tau = 1)
+
+logstc.der2(x, a = 1, b = 1, tau = 1)
 }
 \arguments{
 \item{x}{points where the function is to be evaluated}
@@ -17,20 +23,32 @@ logstc(x, a = 1, b = 1, tau = 1)
 i.e. the curve approximates \code{exp(tau*x)}}
 }
 \value{
-function evaluated at locations passes in \code{x}
+function evaluated at locations passed in \code{x}
 }
 \description{
-This is a three-parameter sigmoidal (logistic) function.
+Three-parameter sigmoidal (logistic) function and derivatives
 }
 \details{
-The function is defined as \code{f(x,a,b,tau)=a*(1-1/[1+exp(tau*(t-b))])}.
+The function is defined as \code{f(x,a,b,tau)=a*(1-1/[1+exp(tau*(x-b))])}.
+Derivatives are calculated analytically.
 }
+\section{Functions}{
+\itemize{
+\item \code{logstc}: logistic function
+
+\item \code{logstc.der}: 1st derivative of logistic function
+
+\item \code{logstc.der2}: 2nd derivative of logistic function
+}}
 \examples{
-x<-0:100
-plot(-1,-1,xlim=range(x),ylim=c(0,1),xlab="x",ylab="logstc")
-for(tau in c(.1,.5,1)) {
-   lines(x,logstc(x,1,50,tau))
-}  
+x<-seq(40,60,len=100)
+plot(-1,-1,xlim=range(x),ylim=c(-.1,1),xlab="x",ylab="logstc")
+for(tau in c(.5,1)) {
+    lines(x,logstc(x,1,50,tau),col="red")
+    lines(x,logstc.der(x,1,50,tau),col="blue")
+    lines(x,logstc.der2(x,1,50,tau),col="green")    
+ }  
+legend("topleft",c("function","1st derivative","2nd derivative"),lty=1,col=c("red","blue","green"))
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}

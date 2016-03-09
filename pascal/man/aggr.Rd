@@ -4,7 +4,8 @@
 \alias{aggr}
 \title{Aggregates a Data Frame}
 \usage{
-aggr(d, factors = NULL, newcols = NULL, expand = FALSE)
+aggr(d, factors = NULL, newcols = NULL, expand = FALSE,
+  keep.numerics = FALSE)
 }
 \arguments{
 \item{d}{Source data frame containing the data set to aggregate}
@@ -18,6 +19,9 @@ variables and the function with which they are calculated}
 \item{expand}{Logical flag: if TRUE, the resulting data frame will contain
 all combinations of the supplied factors, even if these are
 not present in the original data frame}
+
+\item{keep.numerics}{Logical flag: if TRUE, numeric columns defining the grouping
+will be kept numeric in the aggregated data, i.e. not converted to a factor}
 }
 \value{
 Data frame containing the aggregated data
@@ -55,7 +59,7 @@ executed.
 
 If the package \code{parallel} is installed, some computations are
 parallelized on platforms other than Windows, using all available
-processor cores available.  However, the performance gains is small
+processor cores.  However, the performance gain is small
 for simple summary functions.
 }
 \examples{

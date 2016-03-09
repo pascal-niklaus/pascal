@@ -69,11 +69,8 @@ aov.ftest <- function (aovobj, test.formula, table=FALSE)
   trim <- function(x) {  
     sub("^ *(.*?) *$","\\1",x);
   }
-  fixterm <- function(x) {
-    sapply(x, function(x) { paste(sort(trim(strsplit(x,":")[[1]])),collapse=":") } )
-  }
   a <- summary(aovobj)[[1]];                        
-  rownames(a) <- fixterm(rownames(a));
+  rownames(a) <- sorted.code(trim(rownames(a)),split=":");
   if(!is.list(test.formula)) 
     test.formula <- list(test.formula);
   ntests <- length(test.formula);
@@ -83,8 +80,8 @@ aov.ftest <- function (aovobj, test.formula, table=FALSE)
     nom <- as.character(test.formula[[i]])[2];
     den <- as.character(test.formula[[i]])[3];
 
-    nom.row <- which(fixterm(nom) == rownames(a));
-    den.row <- which(fixterm(den) == rownames(a));
+    nom.row <- which(sorted.code(nom,split=":") == trim(rownames(a)));
+    den.row <- which(sorted.code(den,split=":") == rownames(a));
 
     if(length(nom.row)!=1) stop("Nominator ",nom," not found");
     if(length(den.row)!=1) stop("Denominator ",den," not found");

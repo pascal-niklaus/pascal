@@ -8,7 +8,9 @@
 #'
 #' \code{asreml.nvc} essentially calls \code{asreml}, setting constraints to variance components to 'U'
 #' by modifying \code{gammas.table} in the \code{G.param} argument.
-#' 
+#'
+#' @param ginits Optional vector with initial values for \code{gamma} (units: scaled dispersion), in the
+#' order in which the variance components are shown in the output of asreml 
 #' @param ... All arguments that are to be passed to \code{asreml}
 #' @return An asreml object as would be returned if \code{asreml} was called directly
 #' @examples
@@ -67,6 +69,10 @@ asreml.nvc <- function (...)
   m$start.values <- TRUE;
   gammas <- eval(m,parent.frame())$gammas.table;
   gammas$Constraint<-'U';
+  if("ginits" %in% names(m)) {
+      gammas$Value <- eval(m$ginits)
+      m$ginits <- NULL
+  }
   m$start.values <- NULL;
   m$G.param<-gammas;
   eval(m,parent.frame());    
