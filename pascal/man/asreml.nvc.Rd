@@ -7,10 +7,11 @@
 asreml.nvc(...)
 }
 \arguments{
-\item{...}{All arguments that are to be passed to \code{asreml}}
-
-\item{ginits}{Optional vector with initial values for \code{gamma} (units: scaled dispersion), in the
-order in which the variance components are shown in the output of asreml}
+\item{...}{All arguments that are to be passed to \code{asreml}.
+An optional vector \code{ginits} with initial values for
+\code{gamma} (units: scaled dispersion) can be provided, with
+values in the order in which the variance components are shown in
+the output of asreml.}
 }
 \value{
 An asreml object as would be returned if \code{asreml} was called directly

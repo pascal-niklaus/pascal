@@ -32,6 +32,7 @@
 #' ## [1] "A:A" "A:B" "A:C" "B:B" "B:C" "C:C"
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @importFrom utils head tail
 #' @export
 combn2 <- function(x, m, replace=FALSE, FUN=NULL) {    
     v <- seq_along(x)

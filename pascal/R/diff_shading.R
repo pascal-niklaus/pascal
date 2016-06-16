@@ -49,6 +49,7 @@
 #' flushpoly(mem)
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @rdname diff_shading
+#' @importFrom graphics polygon
 #' @export
 addpoly <- function (mem,x,y1,y2) {
   if(!is.null(mem$x)) {

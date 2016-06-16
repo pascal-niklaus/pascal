@@ -9,9 +9,12 @@
 #' \code{asreml.nvc} essentially calls \code{asreml}, setting constraints to variance components to 'U'
 #' by modifying \code{gammas.table} in the \code{G.param} argument.
 #'
-#' @param ginits Optional vector with initial values for \code{gamma} (units: scaled dispersion), in the
-#' order in which the variance components are shown in the output of asreml 
-#' @param ... All arguments that are to be passed to \code{asreml}
+#' @param ... All arguments that are to be passed to \code{asreml}.
+#' An optional vector \code{ginits} with initial values for
+#' \code{gamma} (units: scaled dispersion) can be provided, with
+#' values in the order in which the variance components are shown in
+#' the output of asreml.
+#'
 #' @return An asreml object as would be returned if \code{asreml} was called directly
 #' @examples
 #' \dontrun{

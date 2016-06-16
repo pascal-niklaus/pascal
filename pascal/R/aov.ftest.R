@@ -14,6 +14,7 @@
 #' a formatted ANOVA table if \code{table=TRUE}. Note that all P values are rounded
 #' up to the next displayed digit, i.e. all P values < 0.001 will be indicated as 0.001.
 #' @seealso \code{\link{aov}} 
+#' @importFrom stats pf terms 
 #' @examples
 #' library(pascal)
 #' require(MASS)

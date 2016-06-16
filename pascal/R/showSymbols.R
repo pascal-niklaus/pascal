@@ -7,6 +7,7 @@
 #' @examples
 #' showSymbols()
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @importFrom graphics points text plot
 #' @export    
 showSymbols <- function()
 {

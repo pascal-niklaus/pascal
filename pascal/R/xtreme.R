@@ -16,6 +16,7 @@
 #' pnorm(-3.5)*2; # fraction of data more than 3.5 sd away from mean
 #' y <- rnorm(1e6)
 #' sum(xtreme(y))/1e6;
+#' @importFrom stats mad median 
 #' @export
 xtreme <- function(x,f=3.5) 
 { 

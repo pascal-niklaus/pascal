@@ -20,6 +20,7 @@
 #' aggregate(testDF$y,by=list(by=testDF$by),function(x) { mean(x,na.rm=TRUE) } )
 #' @seealso \code{\link{mean}} \code{\link{var}} \code{\link{se}} \code{\link{sd}} \code{\link{median}} \code{\link{min}} \code{\link{max}}  
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @importFrom stats var sd median
 #' @rdname NAsafes
 #' @export
 mean_NAsafe <- function(x) { return(mean(x,na.rm=T)) }

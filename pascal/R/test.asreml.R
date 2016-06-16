@@ -40,6 +40,8 @@
 #' ## 13.31 
 #' @keywords utilities, misc
 #' @seealso wald.asreml 
+#' @importFrom stats printCoefmat
+#' @importFrom utils capture.output
 #' @export
 test.asreml <- function(d.asr,returnWald=FALSE,silent=FALSE) 
 {

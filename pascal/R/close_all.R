@@ -13,6 +13,7 @@
 #' unlink("test.pdf");
 #' unlink("some_file.txt");
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @importFrom grDevices dev.list dev.off
 #' @export    
 close_all <- function()
 {

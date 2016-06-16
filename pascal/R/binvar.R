@@ -19,7 +19,7 @@
 #'     -4
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
-#' 
+#' @importFrom stats weighted.mean 
 #' @keywords misc, utilities
 #' @export
 binvar <- function(x, rho, width = 1) {

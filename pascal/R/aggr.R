@@ -89,6 +89,7 @@
 #' ## 14 nonchilled       95 13.28333 6
 #' 
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @import datasets 
 #' @export
 aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
     parallel <- (Sys.info()["sysname"]!="Windows") && requireNamespace("parallel")

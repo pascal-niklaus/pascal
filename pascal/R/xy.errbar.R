@@ -26,6 +26,7 @@
 #' CO2.aggr<-aggr(CO2,c("conc"),c("uptake=mean(uptake)","se.uptake=se(uptake)"))
 #' xy.errbar(safen(CO2.aggr$conc),CO2.aggr$uptake,yerr=CO2.aggr$se.uptake)
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @importFrom graphics plot segments points par
 #' @export
 xy.errbar <- function (x, y, yplus=NULL, yminus=NULL, xplus=NULL, xminus=NULL, yerr=NULL, xerr=NULL, cap = 0.015, 
                        lty = 1, lwd = 1, add=FALSE, ...) {    
