@@ -48,7 +48,7 @@
 #'
 #' @seealso \code{\link{aggregate}} 
 #' @examples
-#' data(CO2)
+#' data(CO2, package="datasets")
 #' CO2[1:3,]
 #' ##   Plant   Type  Treatment conc uptake
 #' ## 1   Qn1 Quebec nonchilled   95   16.0
@@ -103,7 +103,7 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
 
     if(! all ( facnames %in% names(d) ))
        stop("Grouping factor(s) ",
-            paste("'",facnames[ ! facnames %in% names(CO2) ],"'",
+            paste("'",facnames[ ! facnames %in% names(d) ],"'",
                   sep='',collapse=', '),
             " is/are not part of the data frame")
     

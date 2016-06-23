@@ -63,7 +63,7 @@ processor cores.  However, the performance gain is small
 for simple summary functions.
 }
 \examples{
-data(CO2)
+data(CO2, package="datasets")
 CO2[1:3,]
 ##   Plant   Type  Treatment conc uptake
 ## 1   Qn1 Quebec nonchilled   95   16.0
