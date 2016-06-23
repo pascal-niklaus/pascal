@@ -19,7 +19,7 @@ Note that the result is different from \code{levels{some_factor}}, since levels 
 a factor can take, even if there are no corresponding values in the vector (e.g. due to subsetting).
 }
 \examples{
-data(CO2)
+data(CO2, package="datasets")
 levels(CO2$Plant)
 ## [1] "Qn1" "Qn2" "Qn3" "Qc1" "Qc3" "Qc2" "Mn3" "Mn2" "Mn1" "Mc2" "Mc3" "Mc1"
 d <- CO2[1:14,]

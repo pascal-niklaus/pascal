@@ -40,7 +40,7 @@
 #'                 all combinations of the supplied factors, even if these are
 #'                 not present in the original data frame
 #' @examples
-#' data(CO2)
+#' data(CO2, package="datasets")
 #' d<-CO2
 #' d$Replicate<-substr(as.character(d$Plant),3,3)
 #' d.split <- splt(d,factors=c("Replicate","Type","conc"),by="Treatment",to.split=c("uptake"))

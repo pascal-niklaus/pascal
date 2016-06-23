@@ -51,7 +51,7 @@
 #'
 #' @seealso \code{\link{aggregate}}, \code{\link{expand.grid}}
 #' @examples
-#' data(CO2)
+#' data(CO2, package="datasets")
 #' d<-CO2
 #' d$Replicate<-substr(as.character(d$Plant),3,3)
 #' d.split <- splt(d,factors=c("Replicate","Type","conc"),by="Treatment",to.split=c("uptake"))

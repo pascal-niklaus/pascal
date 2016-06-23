@@ -57,7 +57,7 @@ All rows with data from \code{col1} will then have \code{group}==\code{"a"}, row
 If no \code{cat.names} are passed, the name of the columns is used instead.
 }
 \examples{
-data(CO2)
+data(CO2, package="datasets")
 d<-CO2
 d$Replicate<-substr(as.character(d$Plant),3,3)
 d.split <- splt(d,factors=c("Replicate","Type","conc"),by="Treatment",to.split=c("uptake"))

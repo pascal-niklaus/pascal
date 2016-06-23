@@ -1,8 +1,8 @@
 #' Create unique ID from separate parts that are sorted
 #' 
 #' \code{sorted.code} constructs IDs from individual parts, making
-#' sure that these parts sorted.code(c("a:b:c","z:x:y","b:a"),split=":",collapse="-") # case 3 are sorted in alphabetical order before being
-#' mergheses/Adele Ferrari/ed. This can be used e.g. to create unambiguous label for
+#' sure that these parts are sorted in alphabetical order before being
+#' merged. This can be used e.g. to create unambiguous label for
 #' community compositions, given sets of species.
 #' 
 #' The parts to be merged can be passed in four different forms:

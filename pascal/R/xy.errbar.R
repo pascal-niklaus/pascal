@@ -17,7 +17,7 @@
 #' @param ... extra arguments passed to \code{segments} , e.g. to colors
 #' @examples
 #' ## example: barplot
-#' data(CO2)
+#' data(CO2, package="datasets")
 #' CO2.aggr<-aggr(CO2,c("Treatment"),c("uptake=mean(uptake)","se.uptake=se(uptake)"))
 #' x<-barplot(CO2.aggr$uptake,names.arg=CO2.aggr$Treatment,ylim=c(0,max(CO2.aggr$uptake+CO2.aggr$se.uptake)))
 #' xy.errbar(x,CO2.aggr$uptake,yerr=CO2.aggr$se.uptake,add=TRUE)

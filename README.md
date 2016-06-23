@@ -30,6 +30,7 @@ Outputs nicely formatted table.
   This is a convenience function acting as wrapper around asreml, achieving what otherwise has to be done in several steps (i.e. constructing a suitable G.param structure passed to asreml)
 - test.asreml: show Wald tests with denominator degrees of freedom, variance components, and (if available) stratum variances,
  given a fitted asreml object
+- plotci.asreml: plot predicted values and confidence intervals based on an ASReml-fit, optionally including (back)transformation of values 
 
 ### Formatting
 
@@ -42,6 +43,7 @@ Outputs nicely formatted table.
 - xy.errbar: Add error bars to your graphics
 - newpoly/addpoly/flushpoly: intelligently shade area between lines
 - showSymbols: show plot symbols
+- corner.label: add labels to corners of plots
 
 ### Functions
 
@@ -67,6 +69,8 @@ Outputs nicely formatted table.
 - combn2: create combinations with or without replacement
 - sorted.code: create unique, unambiguous codes from lists, e.g. communities from species composition 
 - binvar: variance of "binned" data
+- vector.crossprod: cross-product of 3D-vectors
+- vector.norm: p-norm of vectors
 
 ### Misc
 

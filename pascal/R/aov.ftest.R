@@ -70,7 +70,7 @@ aov.ftest <- function (aovobj, test.formula, table=FALSE)
   trim <- function(x) {  
     sub("^ *(.*?) *$","\\1",x);
   }
-  a <- summary(aovobj)[[1]];                        
+  a <- summary(aovobj,intercept=TRUE)[[1]];                        
   rownames(a) <- sorted.code(trim(rownames(a)),split=":");
   if(!is.list(test.formula)) 
     test.formula <- list(test.formula);
