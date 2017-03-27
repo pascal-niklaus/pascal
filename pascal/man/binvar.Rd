@@ -4,13 +4,14 @@
 \alias{binvar}
 \title{Variance of distribution of binned data}
 \usage{
-binvar(x, rho, width = 1)
+binvar(x, frac, width = 1)
 }
 \arguments{
 \item{x}{vector with the center of the bins}
 
-\item{rho}{relative probability density for each bin. \code{rho} is
-normalized to unity integral, i.e. \code{sum(width*rho_i) = 1}.}
+\item{frac}{amount of data in bin. \code{frac} is normalized to
+unity sum. Note that \code{frac} is not the probability
+density, which would be \code{frac/width}.}
 
 \item{width}{width of the bin}
 }
@@ -25,8 +26,14 @@ Note that the estimated variance will be biased in the case of discretized data,
 i.e. it will differ from the one of the original population.
 }
 \examples{
-    -4
-
+## simulate data in two bins:
+xsim <- c(runif(10000,0,1),runif(30000,1,1.5))
+hist(xsim,breaks=seq(0,2,by=.1))
+x <- c(.5, 1.25) # center of bins
+w <- c(1, .5) # width of bins
+f <- c(1,3)   # amount of data in bins
+binvar(x,f,w)
+var(xsim) # compare to simulated data
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
