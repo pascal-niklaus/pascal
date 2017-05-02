@@ -5,8 +5,14 @@ Version: 1.5.2
 Date: 2017-03-27
 Author: Pascal A. Niklaus
 Maintainer: Pascal A. Niklaus <pascal.niklaus@ieu.uzh.ch>
-Depends: R (>= 3.0.0)
-Suggests: MASS, parallel, asreml, grid, gridBase
+Depends:
+    R (>= 3.0.0)
+Suggests:
+    MASS,
+    parallel,
+    asreml,
+    grid,
+    gridBase
 Description: Pascal's collection of functions.
 License: GPL (>=2)
 RoxygenNote: 5.0.1
