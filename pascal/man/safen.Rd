@@ -33,4 +33,3 @@ safen(x)
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

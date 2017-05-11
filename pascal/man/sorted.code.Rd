@@ -44,4 +44,3 @@ sorted.code(list(c("a","b","c"),c("z","y")),collapse="-")    # case 4
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

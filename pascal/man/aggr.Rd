@@ -104,10 +104,9 @@ aggr(CO2.red,c("Treatment","CO2.conc=conc"),c("uptake=mean(uptake)","n=length(up
 ## 14 nonchilled       95 13.28333 6
 
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{aggregate}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

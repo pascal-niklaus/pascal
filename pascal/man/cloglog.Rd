@@ -32,4 +32,3 @@ invcloglog(cloglog(.3))
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

@@ -53,4 +53,3 @@ corner.label("ddd",pos="bottomleft",dist=c(1.7,1),cex=2)
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

@@ -57,4 +57,3 @@ splittxt(paste(LETTERS[1:26],collapse=""),10)
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

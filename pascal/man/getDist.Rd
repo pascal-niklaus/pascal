@@ -33,10 +33,9 @@ d <- dist(USJudgeRatings)
 getDist(d,c("PASKEY,L.","SHEA,D.M.","LEVINE,I."),rep("LEVINE,I.",3))
 ## [1] 1.56 2.35 0.00
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{dist}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

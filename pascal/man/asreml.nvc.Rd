@@ -78,4 +78,3 @@ nvc.example.asr <- asreml.nvc(y~plotgroup*subplotgroup,random=~plot,data=nvc.exa
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

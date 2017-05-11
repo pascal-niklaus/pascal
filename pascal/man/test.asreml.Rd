@@ -49,12 +49,11 @@ test.asreml(oats.asr)
 ## ---- Dispersion:
 ## 13.31 
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 wald.asreml
 }
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}
 \keyword{misc}
 \keyword{utilities,}
-

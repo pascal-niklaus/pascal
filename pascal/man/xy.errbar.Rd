@@ -52,4 +52,3 @@ xy.errbar(safen(CO2.aggr$conc),CO2.aggr$uptake,yerr=CO2.aggr$se.uptake)
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

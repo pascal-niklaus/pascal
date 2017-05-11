@@ -45,10 +45,9 @@ combn2(LETTERS[1:3],2,replace = TRUE,FUN=function(x) paste(x,collapse=":"))
 ## [1] "A:A" "A:B" "A:C" "B:B" "B:C" "C:C"
 
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{combn}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

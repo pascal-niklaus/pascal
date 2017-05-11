@@ -25,4 +25,3 @@ unlink("some_file.txt");
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-

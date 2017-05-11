@@ -32,12 +32,11 @@ se(c(1:5,NA))
 se(c(1:5,NA),na.rm=TRUE)
 ## [1] 0.7071068
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{sd}}
 }
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}
 \keyword{misc}
 \keyword{utilities,}
-

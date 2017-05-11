@@ -35,12 +35,11 @@ vector.norm(a,2)
 norm(a,"2")
 vector.norm(d)
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 norm
 }
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}
 \keyword{misc,}
 \keyword{utilities}
-

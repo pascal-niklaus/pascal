@@ -40,6 +40,7 @@ Derivatives are calculated analytically.
 
 \item \code{logstc.der2}: 2nd derivative of logistic function
 }}
+
 \examples{
 x<-seq(40,60,len=100)
 plot(-1,-1,xlim=range(x),ylim=c(-.1,1),xlab="x",ylab="logstc")
@@ -55,4 +56,3 @@ Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
 \keyword{misc,}
 \keyword{utilities}
-

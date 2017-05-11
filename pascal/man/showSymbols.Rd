@@ -13,12 +13,11 @@ corresponding to \code{pch} values of 0 to 25.
 \examples{
 showSymbols()
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{plot}}
 
 \code{\link{points}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

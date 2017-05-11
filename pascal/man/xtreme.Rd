@@ -25,12 +25,11 @@ pnorm(-3.5)*2; # fraction of data more than 3.5 sd away from mean
 y <- rnorm(1e6)
 sum(xtreme(y))/1e6;
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{mad}}
 }
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}
 \keyword{misc}
 \keyword{utilities}
-

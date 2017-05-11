@@ -2,9 +2,9 @@
 % Please edit documentation in R/xsink.R
 \name{Sink}
 \alias{Sink}
-\alias{checkSink}
-\alias{disableSink}
 \alias{enableSink}
+\alias{disableSink}
+\alias{checkSink}
 \title{Sink that can be enabled/disabled}
 \usage{
 Sink(...)
@@ -39,10 +39,9 @@ Sink("file.txt")
 # do some stuff here
 Sink()
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{sink}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

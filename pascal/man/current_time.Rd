@@ -19,10 +19,9 @@ Convenience function that returns date and time formatted as I like them
 \examples{
 current_time()
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{Sys.time}}, \code{\link{strftime}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

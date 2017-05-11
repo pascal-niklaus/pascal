@@ -122,14 +122,13 @@ d.stacked[d.stacked$Type=="Mississippi" & d.stacked$Replicate==1,]
 ## 48         1 Mississippi  675 nonchilled   32.4
 ## 49         1 Mississippi   95 nonchilled   10.6
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{aggregate}}, \code{\link{expand.grid}}
+}
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
 \keyword{datagen}
 \keyword{manip}
 \keyword{misc}
 \keyword{utilities}
-

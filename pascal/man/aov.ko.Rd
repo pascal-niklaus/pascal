@@ -72,10 +72,9 @@ aov.ftest(oats.aov,V~B:V,table=TRUE)
 ## 1   V B:V  2  10 1786.36 893.18 1.49 0.273     
 }
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{aov}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

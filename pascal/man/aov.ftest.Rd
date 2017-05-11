@@ -75,10 +75,9 @@ aov.ftest(oats.aov2,list(V~B:V,N~Residuals,V:N~Residuals),table=FALSE)
 # [1] 2.723869e-01 2.457710e-12 9.321988e-01
 
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{aov}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

@@ -56,10 +56,9 @@ plot(x,y,ty="l")
 x.back<-power.posneg.backtransform(y,posexp=1/2,negexp=2/3,slope=1)
 range(x.back-x)
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{mean}} \code{\link{var}} \code{\link{se}} \code{\link{sd}} \code{\link{median}} \code{\link{min}} \code{\link{max}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

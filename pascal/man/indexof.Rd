@@ -18,10 +18,9 @@ indices of columns with the specified names
 Deprecated -- is just there for compatibility with old code
 and will eventually be removed
 }
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
-}
 \seealso{
 \code{\link{which}}
 }
-
+\author{
+Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+}

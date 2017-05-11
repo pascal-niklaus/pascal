@@ -129,4 +129,3 @@ for(g in levels(ex$grp))
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }
-
