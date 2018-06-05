@@ -17,7 +17,14 @@
 #' @return 3 x 3 transformation matrix
 #' 
 #' @examples
-#' ## none so far...
+#' p1 <- polycircle(0,0,rx=3,ry=1,pos="BL")
+#' plot(NULL,xlim=c(-5,5),ylim=c(-5,5),asp=1,xlab="",ylab="")
+#' polygon(p1,border="red")
+#' m <- scale2D(1.5) %*% rotate2D(pi/6) %*% translate2D(-3,-1)
+#' p2 <- apply2D(m,p1)
+#' polygon(p2,border="blue")
+#' @seealso plot2D
+#' @aliases affine2D
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @rdname affine2D
 #' @export
@@ -28,7 +35,7 @@ translate2D <- function(x,y)
 
 #' @rdname affine2D
 #' @export
-scale2D <- function(kx,ky)
+scale2D <- function(kx,ky=kx)
 {
     matrix(c(kx,0,0,0,ky,0,0,0,1),nrow=3)
 }
@@ -96,6 +103,10 @@ identity2D <- function()
 #' @return list with elements x and y
 #' 
 #' @examples
+#' d <- list(x=1:4,y=rep(0,4))
+#' plot(d,xlim=c(0,5),ylim=c(-1,4),asp=1)
+#' d2 <- apply2D(rotate2D(-pi/6)%*%scale2D(1.5,1.5), d)
+#' points(d2,col="red")
 #' ## none so far...
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export

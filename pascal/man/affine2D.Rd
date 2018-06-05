@@ -2,6 +2,7 @@
 % Please edit documentation in R/affine2D.R
 \name{translate2D}
 \alias{translate2D}
+\alias{affine2D}
 \alias{scale2D}
 \alias{rotate2D}
 \alias{shearx2D}
@@ -14,7 +15,7 @@
 \usage{
 translate2D(x, y)
 
-scale2D(kx, ky)
+scale2D(kx, ky = kx)
 
 rotate2D(theta)
 
@@ -50,7 +51,15 @@ identity2D()
 Create 3 x 3 matrices for affine transformations
 }
 \examples{
-## none so far...
+p1 <- polycircle(0,0,rx=3,ry=1,pos="BL")
+plot(NULL,xlim=c(-5,5),ylim=c(-5,5),asp=1,xlab="",ylab="")
+polygon(p1,border="red")
+m <- scale2D(1.5) \%*\% rotate2D(pi/6) \%*\% translate2D(-3,-1)
+p2 <- apply2D(m,p1)
+polygon(p2,border="blue")
+}
+\seealso{
+plot2D
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}

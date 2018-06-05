@@ -7,6 +7,7 @@ Author: Pascal A. Niklaus
 Maintainer: Pascal A. Niklaus <pascal.niklaus@ieu.uzh.ch>
 Depends: R (>= 3.0.0)
 Suggests: MASS, parallel, asreml, grid, gridBase, GenSA
+Imports: methods
 Description: Pascal's collection of functions.
 License: GPL (>=2)
 RoxygenNote: 6.0.1

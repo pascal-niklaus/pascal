@@ -124,8 +124,8 @@ stck <- function(d, factors=NULL, covars=NULL, to.stack, cat.names=NULL, expand=
     if(length(levs)!=length(unique(levs))) {
         d$..n..stck.. <- 1:nrow(d);
         facnames <- c("..n..stck..",facnames);
-        facnewnames < -c("..n..stck..",facnewnames);
-        rownadded < -T;
+        facnewnames <- c("..n..stck..",facnewnames);
+        rownadded <- TRUE;
         faccols <- match( facnames, names(d))
         levs    <- apply(
             as.matrix(d[,faccols]),

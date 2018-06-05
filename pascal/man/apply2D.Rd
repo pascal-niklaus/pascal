@@ -21,6 +21,10 @@ Transform (x,y) data passed either as separate vectors x and y or as list with
 elements x and y.
 }
 \examples{
+d <- list(x=1:4,y=rep(0,4))
+plot(d,xlim=c(0,5),ylim=c(-1,4),asp=1)
+d2 <- apply2D(rotate2D(-pi/6)\%*\%scale2D(1.5,1.5), d)
+points(d2,col="red")
 ## none so far...
 }
 \author{
