@@ -4,7 +4,8 @@
 \alias{splt}
 \title{Split a data frame}
 \usage{
-splt(d, by, to.split, factors = NULL, new.names = NULL, expand = FALSE)
+splt(d, by, to.split, factors = NULL, new.names = NULL,
+  expand = FALSE, sep = ":")
 }
 \arguments{
 \item{d}{Source data frame containing the data set to split}
@@ -29,17 +30,19 @@ variables pasted together using a ':'.}
 \item{expand}{Logical flag: if TRUE, the resulting data frame will contain
 all combinations of the supplied factors, even if these are
 not present in the original data frame}
+
+\item{sep}{Separator. Used internally and should not occur in factor levels}
 }
 \value{
 Data frame containing the split data
 }
 \description{
 Given a data frame, one or several columns are split into several new ones;
-the rows that define how the columns are split are defined by the grouping 
+the rows that define how the columns are split are defined by the grouping
 variables \code{by}.
 }
 \details{
-\code{splt} and the corresponding \code{stck} were written as a 
+\code{splt} and the corresponding \code{stck} were written as a
 generic way to break up and combine individual data columns.
 
 The \code{factors} (these can also be continuous covariables)
@@ -55,7 +58,7 @@ form \code{to.split=c("newcol1=col1","newcol2=col2")}.
 The newly generated columns will have names \code{newcol1.bylev1},
 \code{newcol2.bylev2} etc, where bylev1, bylev2 are the levels of the \code{by} variable.
 For example, to.split=c("m=biomass"), by=c("year") will generate the new
-columns \code{m.1992}, \code{m.1993}, \code{m.1994} if \code{year} 
+columns \code{m.1992}, \code{m.1993}, \code{m.1994} if \code{year}
 consists of the levels \code{1992}, \code{1993} and \code{1994}.
 The 'by' part of the columns to be created can also be specified explicitely
 in new.names in the form \code{new.names=c("1992","1993","1994")}. Note that the

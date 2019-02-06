@@ -9,20 +9,20 @@
 \title{Functions to print nice headings and trailers}
 \usage{
 heading(txt = NULL, width = 80, right = FALSE, bottom = FALSE,
-  char = "#", spc = "  ", side.char = char, corner.char = rep(char, 4),
+  char = "#", spc = "  ", side.char = char, corner.char = rep(char,
+  4), post = 1, pre = 0, center = FALSE)
+
+trailer(txt = NULL, width = 80, right = FALSE, char = "#",
+  spc = "  ", side.char = char, corner.char = rep(char, 4),
   post = 1, pre = 0, center = FALSE)
 
-trailer(txt = NULL, width = 80, right = FALSE, char = "#", spc = "  ",
-  side.char = char, corner.char = rep(char, 4), post = 1, pre = 0,
-  center = FALSE)
+simple.heading(txt = NULL, width = 80, char = "#",
+  side.char = char, corner.char = rep(char, 4), spc = "  ",
+  pre = 0, post = 1, center = TRUE)
 
-simple.heading(txt = NULL, width = 80, char = "#", side.char = char,
-  corner.char = rep(char, 4), spc = "  ", pre = 0, post = 1,
-  center = TRUE)
-
-simple.trailer(txt = NULL, width = 80, char = "#", side.char = char,
-  corner.char = rep(char, 4), spc = "  ", pre = 0, post = 1,
-  center = TRUE)
+simple.trailer(txt = NULL, width = 80, char = "#",
+  side.char = char, corner.char = rep(char, 4), spc = "  ",
+  pre = 0, post = 1, center = TRUE)
 }
 \arguments{
 \item{txt}{A vector or list of strings that are to be printed in the heading or trailer.

@@ -1,11 +1,11 @@
 #' Split a data frame
-#' 
+#'
 #' Given a data frame, one or several columns are split into several new ones;
-#' the rows that define how the columns are split are defined by the grouping 
+#' the rows that define how the columns are split are defined by the grouping
 #' variables \code{by}.
 #'
-#' \code{splt} and the corresponding \code{stck} were written as a 
-#' generic way to break up and combine individual data columns. 
+#' \code{splt} and the corresponding \code{stck} were written as a
+#' generic way to break up and combine individual data columns.
 #'
 #' The \code{factors} (these can also be continuous covariables)
 #' that are to be preserved in the split data frame
@@ -20,7 +20,7 @@
 #' The newly generated columns will have names \code{newcol1.bylev1},
 #' \code{newcol2.bylev2} etc, where bylev1, bylev2 are the levels of the \code{by} variable.
 #' For example, to.split=c("m=biomass"), by=c("year") will generate the new
-#' columns \code{m.1992}, \code{m.1993}, \code{m.1994} if \code{year} 
+#' columns \code{m.1992}, \code{m.1993}, \code{m.1994} if \code{year}
 #' consists of the levels \code{1992}, \code{1993} and \code{1994}.
 #' The 'by' part of the columns to be created can also be specified explicitely
 #' in new.names in the form \code{new.names=c("1992","1993","1994")}. Note that the
@@ -47,6 +47,7 @@
 #' @param expand Logical flag: if TRUE, the resulting data frame will contain
 #'                all combinations of the supplied factors, even if these are
 #'                not present in the original data frame
+#' @param sep Separator. Used internally and should not occur in factor levels
 #' @return Data frame containing the split data
 #'
 #' @seealso \code{\link{aggregate}}, \code{\link{expand.grid}}
@@ -109,7 +110,7 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @keywords manip datagen utilities misc
 #' @export
-splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
+splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE, sep=":")
 {
     # extract factor names
     if(!is.null(factors)) {
@@ -129,13 +130,13 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
         if( any( is.na(faccols) ) )
             stop("splt: Non-existing column specified in 'factors'");
         if(length(faccols)!=0) {
-            for(i in faccols) 
-                d[,i] <- as.character(d[,i]) 
+            for(i in faccols)
+                d[,i] <- as.character(d[,i])
             levs <- apply(
                 as.matrix(d[,faccols]),
                 1,
-                function(x) 
-                    paste(x,collapse=":")
+                function(x)
+                    paste(x,collapse=sep)
                 )
         }
     } else {
@@ -155,14 +156,14 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
         as.matrix(d[,c(bycols)]),
         1,
         function(x)
-            paste(x,collapse=":")
+            paste(x,collapse=sep)
         )
-    
+
     alllevs <- apply(
         as.matrix(d[,c(bycols,faccols)]),
         1,
         function(x)
-            paste(x,collapse=":")
+            paste(x,collapse=sep)
         )
 
     rownadded<-F;
@@ -179,12 +180,12 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
       alllevs     <- apply(
           as.matrix( d[,c(bycols,faccols)]),
           1,
-          function(x) paste(x,collapse=":")
+          function(x) paste(x,collapse=sep)
           )
       levs        <- apply(
           as.matrix( d[,faccols]),
           1,
-          function(x) paste(x,collapse=":")
+          function(x) paste(x,collapse=sep)
           )
     }
 
@@ -199,11 +200,11 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
     } else {
         lev <- sort( unique(levs) )  # unique
         if(length(faccols)==1)       # need to treat single factor case separately (vector/matrix)
-            dnew <- data.frame(lev) 
+            dnew <- data.frame(lev)
         else
             dnew <- data.frame(t(sapply(lev,
                                         function(x)
-                                            unlist(strsplit(x,":"),
+                                            unlist(strsplit(x,sep),
                                                    use.names=FALSE),
                                         USE.NAMES=FALSE)
                                  )
@@ -214,7 +215,7 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
         dnew,
         1,
         function(x)
-            paste(x,collapse=":")
+            paste(x,collapse=sep)
         )
 
     for(v in to.split) { # loop over no of vars to stack
@@ -223,8 +224,8 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
       b.vec <- sort(unique(bylevs))
       if(is.null(new.names))
           b.newnames <- b.vec
-      else 
-          b.newnames <- new.names;                
+      else
+          b.newnames <- new.names;
       b.newnames <- gsub("[^A-Za-z0-9_]",".",b.newnames)  # PN: fix illegal var names
 
       if(length(b.newnames) != length(b.vec))
@@ -234,7 +235,7 @@ splt <- function(d, by, to.split, factors=NULL, new.names=NULL, expand=FALSE)
           cmd <- paste("dnew$",
                        v.new,
                        ".",
-                       gsub(":","_",b.newnames[b.index],fixed=T),
+                       gsub(sep,"_",b.newnames[b.index],fixed=T),
                        " <- ",
                        "sapply(rownames(dnew),function(x) { c(d$",
                        v.old,
