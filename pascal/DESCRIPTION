@@ -1,12 +1,13 @@
 Package: pascal
 Type: Package
 Title: Pascal's library
-Version: 1.6
-Date: 2017-09-22
+Version: 1.8
+Date: 2019-04-17
 Author: Pascal A. Niklaus
 Maintainer: Pascal A. Niklaus <pascal.niklaus@ieu.uzh.ch>
 Depends: R (>= 3.0.0)
-Suggests: MASS, parallel, asreml, grid, gridBase, GenSA
+Suggests: MASS, parallel, asreml, grid, gridBase, GenSA, bigmemory,
+        synchronicity
 Imports: methods
 Description: Pascal's collection of functions.
 License: GPL (>=2)

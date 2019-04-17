@@ -1,7 +1,7 @@
 #' Call asreml allowing for negative variance components
 #'
-#' ASReml can fit 'negative variance components', i.e. allow for 
-#' between subjects variances that are lower than would be expected based on the 
+#' ASReml can fit 'negative variance components', i.e. allow for
+#' between subjects variances that are lower than would be expected based on the
 #' variances of the components that are aggregated in these subjects.
 #' This can occur by chance, or because of a systematic negative residual correlation
 #' within the groups.
@@ -24,11 +24,11 @@
 #' nvc.example.asr <- asreml(y~plotgroup*subplotgroup,random=~plot,data=nvc.example)
 #' test.asreml(nvc.example.asr)
 #' ## ---- Wald tests:
-#' ##                        Df denDF F.inc     Pr    
+#' ##                        Df denDF F.inc     Pr
 #' ## (Intercept)             1    96 84340 <2e-16 ***
-#' ## plotgroup               1    96     1   0.48    
-#' ## subplotgroup            1    96     0   0.50    
-#' ## plotgroup:subplotgroup  1    96     0   0.92    
+#' ## plotgroup               1    96     1   0.48
+#' ## subplotgroup            1    96     0   0.50
+#' ## plotgroup:subplotgroup  1    96     0   0.92
 #' ##
 #' ## ---- Stratum variances:
 #' ##            df Variance R!variance
@@ -40,15 +40,15 @@
 #' ## R!variance    1.000e+00 1.185e+01 1.710e+00   6.928   Positive
 #' ##
 #' ## ---- Dispersion:
-#' ## 3.442 
-#' 
+#' ## 3.442
+#'
 #' nvc.example.asr <- asreml.nvc(y~plotgroup*subplotgroup,random=~plot,data=nvc.example)
 #' ## ---- Wald tests:
-#' ##                        Df denDF  F.inc     Pr    
+#' ##                        Df denDF  F.inc     Pr
 #' ## (Intercept)             1    48 152200 <2e-16 ***
-#' ## plotgroup               1    48      1   0.35    
-#' ## subplotgroup            1    48      0   0.57    
-#' ## plotgroup:subplotgroup  1    48      0   0.93    
+#' ## plotgroup               1    48      1   0.35
+#' ## subplotgroup            1    48      0   0.57
+#' ## plotgroup:subplotgroup  1    48      0   0.93
 #' ##
 #' ## ---- Stratum variances:
 #' ##            df Variance plot R!variance
@@ -61,16 +61,18 @@
 #' ## R!variance     1.0000    17.133     3.497   4.899      Positive
 #' ##
 #' ## ---- Dispersion:
-#' ## 4.139 
+#' ## 4.139
 #' }
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
-#' @export    
+#' @export
 asreml.nvc <- function (...)
 {
   m <- match.call();
   m[[1]]<-as.name("asreml");
   m$start.values <- TRUE;
-  gammas <- eval(m,parent.frame())$gammas.table;
+  gammas <- eval(m, parent.frame())
+  ## for compatibility with ASReml 3 and 4
+  gammas <- gammas[[which(names(gammas)%in%c("vparameters.table","gammas.table"))]]
   gammas$Constraint<-'U';
   if("ginits" %in% names(m)) {
       gammas$Value <- eval(m$ginits)
@@ -78,5 +80,5 @@ asreml.nvc <- function (...)
   }
   m$start.values <- NULL;
   m$G.param<-gammas;
-  eval(m,parent.frame());    
+  eval(m,parent.frame());
 }

@@ -1,22 +1,38 @@
 #' Plot label in corner of plot
-#' 
+#'
 #' \code{corner.label} plots a label in the corner of a plot, at positions
 #' that can be specified in different units.
-#' 
+#'
 #' This function facilitates the labelling of plots. Using \code{grid}-graphics,
 #' text is plotted at a distance from one of the plot's corners.
 #' These distances can be specified in different units, including relative to
 #' the size of characters. In addition, a user-provided function can be called
 #' before printing the label.
-#' 
+#'
 #' @param label Text to be plotted, if different from \code{NULL}
-#' @param fun If not \code{NULL}, this arbitrary \code{function(x,y,...)} is called
-#' to performs some plotting before the text \code{txt} is typeset. See examples.
-#' @param pos Corner of plot; can be any combination of "top","bottom","left","right"
-#' @param units Units in which distance from plot corner is given. Default is \code{"char"}.
-#' Check \code{?unit} for more options.
-#' @param dist Distance from corner at which label is plotted. Can be single value or vector \code{(x,y)}.
-#' @param ... Extra parameters passed when calling \code{grid.text}. Check \code{?gpar} for options.
+#'
+#' @param fun If not \code{NULL}, this arbitrary
+#'     \code{function(x,y,...)} is called to performs some plotting
+#'     before the text \code{txt} is typeset. See examples.
+#'
+#' @param pos Corner of plot; can be any combination of
+#'     "top","bottom","left","right"
+#'
+#' @param units Units in which distance from plot corner is
+#'     given. Default is \code{"char"}.  Check \code{?unit} for more
+#'     options.
+#'
+#' @param dist Distance from corner at which label is plotted. Can be
+#'     single value or vector \code{(x,y)}.
+#'
+#' @param frame Either of 'inner', 'figure', or 'plot'. Indicates the
+#'     area that is to be labelled. 'inner' is the entire page area
+#'     except the margins. 'figure' is the figure area. 'plot' is the
+#'     area used for plotting (inside the axis). Defaults to 'plot'.
+#'
+#' @param ... Extra parameters passed when calling
+#'     \code{grid.text}. Check \code{?gpar} for options.
+#'
 #' @examples
 #' \dontrun{
 #' library(grid) # required only because we use grid.cirle in fun
@@ -35,28 +51,32 @@
 #' }
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-corner.label <- function(label=NULL,pos="topleft",units="char",dist=1,fun=NULL,...)
+corner.label <- function(label=NULL,pos="topleft",units="char",dist=1,fun=NULL,frame="plot",...)
 {
     requireNamespace("gridBase")
     requireNamespace("grid")
 
-    vps <- gridBase::baseViewports()
-    grid::pushViewport(vps$plot)
+    frame.opts <- c("inner","figure","plot")
+    frame <- which(frame==frame.opts)
+    if(length(frame)==0)
+        stop("frame must be one of ",paste(paste("'",frame.opts,"'",sep=""),collapse=", "))
 
+    vps <- gridBase::baseViewports()
+    for(i in 1:frame)
+        grid::pushViewport(vps[[i]]
+                       )
     dist <- rep(dist,2)[1:2]
     x <- grepl("right",pos)
-    y <- grepl("top",pos)    
+    y <- grepl("top",pos)
     xx <- grid::unit(x,"npc") + (.5-x)*grid::unit(dist[1],units)
     yy <- grid::unit(y,"npc") + (.5-y)*grid::unit(dist[2],units)
-    
+
     if(!is.null(fun)) {
         fun(xx,yy,...)
     }
     if(!is.null(label)) {
         grid::grid.text(label,x=xx,y=yy,
                   gp=grid::gpar(...))
-    }    
-    grid::popViewport()    
+    }
+    grid::popViewport(n=i)
 }
-
-

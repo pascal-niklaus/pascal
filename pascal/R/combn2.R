@@ -1,6 +1,6 @@
-#' Combinations of n elements, taken m at a Time, with optional replacement
+#' Combinations of n elements, taken m at a time, with optional replacement
 #' 
-#' This function is similar to \code{combn2} but allows for
+#' This function is similar to \code{combn} but allows for
 #' combinations resulting from drawing with replacement.
 #'
 #' To keep implementation simple, \code{combn2} internally uses

@@ -60,21 +60,25 @@ NULL
 #' three resistors are used, two may be wired in parallel, and the
 #' third in series.
 #'
-#' @param ratio target ratio of lower resistor to total series resistance.
+#' @param ratio target ratio of lower resistor to total series
+#'     resistance.
 #' @param rmin minimum total series resistance
 #' @param rmax maximum total series resistance
-#' @param series resistor series (1 <= values < 10). Defaults to E24 series.
-#'        E12 and E48 vectors are available.
-#' @param exponents defaults to 0:6, specifying values from 1 Ohm (inclusive) to 10 MOhm (exclusive).
-#' @param n number of resistors to use. Defaults to 2, but 3 can also be chosen.
-#' @param tol acceptable tolerance for ratio. Defaults to 0.1, which is a maximum of 10\% deviation.
+#' @param series resistor series (1 <= values < 10). Defaults to E24
+#'     series.  E12 and E48 vectors are available.
+#' @param exponents defaults to 0:6, specifying values from 1 Ohm
+#'     (inclusive) to 10 MOhm (exclusive).
+#' @param n number of resistors to use. Defaults to 2, but 3 can also
+#'     be chosen.
+#' @param tol acceptable tolerance for ratio. Defaults to 0.1, which
+#'     is a maximum of 10\% deviation.
 #' @param ntop how many solutions (sorted by deviation) are printed
 #' @return data table with results
-#' @examples
-#' resDivider(.35,rmin=1000,rmax=3000,n=3,tol=.01)
+#' @examples resDivider(.35,rmin=1000,rmax=3000,n=3,tol=.01)
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @keywords utilities misc
 #' @importFrom parallel mclapply
+#' @rdname resdiv
 #' @export
 resDivider <- function(ratio,rmin=1e3,rmax=1e6,series=pascal::E24,exponents=0:6,n=2,tol=.05,ntop=10)
 {

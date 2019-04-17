@@ -5,22 +5,32 @@
 \title{Plot label in corner of plot}
 \usage{
 corner.label(label = NULL, pos = "topleft", units = "char",
-  dist = 1, fun = NULL, ...)
+  dist = 1, fun = NULL, frame = "plot", ...)
 }
 \arguments{
 \item{label}{Text to be plotted, if different from \code{NULL}}
 
-\item{pos}{Corner of plot; can be any combination of "top","bottom","left","right"}
+\item{pos}{Corner of plot; can be any combination of
+"top","bottom","left","right"}
 
-\item{units}{Units in which distance from plot corner is given. Default is \code{"char"}.
-Check \code{?unit} for more options.}
+\item{units}{Units in which distance from plot corner is
+given. Default is \code{"char"}.  Check \code{?unit} for more
+options.}
 
-\item{dist}{Distance from corner at which label is plotted. Can be single value or vector \code{(x,y)}.}
+\item{dist}{Distance from corner at which label is plotted. Can be
+single value or vector \code{(x,y)}.}
 
-\item{fun}{If not \code{NULL}, this arbitrary \code{function(x,y,...)} is called
-to performs some plotting before the text \code{txt} is typeset. See examples.}
+\item{fun}{If not \code{NULL}, this arbitrary
+\code{function(x,y,...)} is called to performs some plotting
+before the text \code{txt} is typeset. See examples.}
 
-\item{...}{Extra parameters passed when calling \code{grid.text}. Check \code{?gpar} for options.}
+\item{frame}{Either of 'inner', 'figure', or 'plot'. Indicates the
+area that is to be labelled. 'inner' is the entire page area
+except the margins. 'figure' is the figure area. 'plot' is the
+area used for plotting (inside the axis). Defaults to 'plot'.}
+
+\item{...}{Extra parameters passed when calling
+\code{grid.text}. Check \code{?gpar} for options.}
 }
 \description{
 \code{corner.label} plots a label in the corner of a plot, at positions

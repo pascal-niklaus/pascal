@@ -2,7 +2,7 @@
 % Please edit documentation in R/combn2.R
 \name{combn2}
 \alias{combn2}
-\title{Combinations of n elements, taken m at a Time, with optional replacement}
+\title{Combinations of n elements, taken m at a time, with optional replacement}
 \usage{
 combn2(x, m, replace = FALSE, FUN = NULL)
 }
@@ -22,7 +22,7 @@ Matrix with combinations in columns, or result of FUN
 applied to columns if FUN is provided
 }
 \description{
-This function is similar to \code{combn2} but allows for
+This function is similar to \code{combn} but allows for
 combinations resulting from drawing with replacement.
 }
 \details{
