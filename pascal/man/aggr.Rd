@@ -5,7 +5,7 @@
 \title{Aggregates a Data Frame}
 \usage{
 aggr(d, factors = NULL, newcols = NULL, expand = FALSE,
-  keep.numerics = FALSE)
+  keep.numerics = FALSE, schar = ":")
 }
 \arguments{
 \item{d}{Source data frame containing the data set to aggregate}
@@ -20,8 +20,12 @@ variables and the function with which they are calculated}
 all combinations of the supplied factors, even if these are
 not present in the original data frame}
 
-\item{keep.numerics}{Logical flag: if TRUE, numeric columns defining the grouping
-will be kept numeric in the aggregated data, i.e. not converted to a factor}
+\item{keep.numerics}{Logical flag: if TRUE, numeric columns
+defining the grouping will be kept numeric in the aggregated
+data, i.e. not converted to a factor}
+
+\item{schar}{separator used in group processing; must not occur in
+factor levels. Defaults to \code{;}.}
 }
 \value{
 Data frame containing the aggregated data

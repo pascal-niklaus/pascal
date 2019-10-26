@@ -1,5 +1,5 @@
 #' Aggregates a Data Frame
-#' 
+#'
 #' \code{aggr} was written in 2005 as a more generic alternative to
 #' \code{\link{aggregate}}, which used excessive memory when a larger
 #' number of factors were given, and which is restricted to a single
@@ -33,7 +33,7 @@
 #' parallelized on platforms other than Windows, using all available
 #' processor cores.  However, the performance gain is small
 #' for simple summary functions.
-#' 
+#'
 #' @param d Source data frame containing the data set to aggregate
 #' @param factors Character vector containing the names of the factors that
 #'                define the categories in the aggregated data set
@@ -42,11 +42,15 @@
 #' @param expand Logical flag: if TRUE, the resulting data frame will contain
 #'               all combinations of the supplied factors, even if these are
 #'               not present in the original data frame
-#' @param keep.numerics Logical flag: if TRUE, numeric columns defining the grouping
-#'               will be kept numeric in the aggregated data, i.e. not converted to a factor
+#'
+#' @param keep.numerics Logical flag: if TRUE, numeric columns
+#'     defining the grouping will be kept numeric in the aggregated
+#'     data, i.e. not converted to a factor
+#' @param schar separator used in group processing; must not occur in
+#'     factor levels. Defaults to \code{;}.
 #' @return Data frame containing the aggregated data
 #'
-#' @seealso \code{\link{aggregate}} 
+#' @seealso \code{\link{aggregate}}
 #' @examples
 #' data(CO2, package="datasets")
 #' CO2[1:3,]
@@ -87,13 +91,18 @@
 #' ## 12 nonchilled      675 36.01667 6
 #' ## 13    chilled       95 11.23333 6
 #' ## 14 nonchilled       95 13.28333 6
-#' 
+#'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @import datasets
 #' @export
-aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
+aggr <- function(d,
+                 factors=NULL,
+                 newcols=NULL,
+                 expand=FALSE,
+                 keep.numerics=FALSE,
+                 schar=":") {
     parallel <- (Sys.info()["sysname"]!="Windows") && requireNamespace("parallel")
-    n.cores <- if(parallel) parallel::detectCores() else 1; 
+    n.cores <- if(parallel) parallel::detectCores() else 1;
 
     ## extract factor names
     facnames    <- sapply(factors,
@@ -106,14 +115,14 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
             paste("'",facnames[ ! facnames %in% names(d) ],"'",
                   sep='',collapse=', '),
             " is/are not part of the data frame")
-    
+
     ## extract column indices of factors that will be used... will need them later
     faccols <- match( facnames, names(d) )
 
     ## remember which columns are numeric
     facnum <- sapply(faccols,
                      function(i) is.numeric(d[,i]))
-    
+
     ## make sure categories are factors, since numeric level codes used later
     for(i in faccols)
         if(! is.factor(d[,i]))
@@ -124,8 +133,8 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
     levs <- apply(as.data.frame(lapply(d[,faccols,drop=FALSE],
                                        function(x) as.integer(x))),
                   1,
-                  function(x) paste(sprintf("%04d",x),collapse=":"))       
-    
+                  function(x) paste(sprintf("%04d",x),collapse=schar))
+
     ## create factor skeleton
     if(expand) {
         faclist <- lapply(faccols,
@@ -138,12 +147,12 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
         ## single factor case needs to be treated separately because
         ## strsplit does not return a list if no separator is detected
         if(length(faccols)==1)
-            dnew <- data.frame(lev) 
+            dnew <- data.frame(lev)
         else
             dnew <- data.frame(
                       t(  sapply(lev,
                                  function(x) {
-                                     unlist(strsplit(x,":"), use.names=FALSE) })
+                                     unlist(strsplit(x,schar), use.names=FALSE) })
                     ))
         colnames(dnew) <- facnewnames
     }
@@ -151,19 +160,19 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
                           1,
                           function(x) {
                               paste(sprintf("%04d",as.integer(x)),
-                                    collapse=":") })    
+                                    collapse=schar) })
 
     ## replace codes by factor levels
-    for(i in seq_along(faccols)) 
+    for(i in seq_along(faccols))
         dnew[,i] <- factor(
             levels( d[[ faccols[i] ]])[ as.integer( as.character(dnew[,i]) ) ] )
 
     ## restore numeric values if requested
     if(keep.numerics)
         for(i in seq_along(facnum))
-            if(facnum[i]) 
-                dnew[,i] <- safen(dnew[,i])    
-    
+            if(facnum[i])
+                dnew[,i] <- safen(dnew[,i])
+
     eqpos <- sapply(newcols,
                     function(x) attr(regexpr("[^=]+=",x),"match.length") )
 
@@ -181,7 +190,7 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
                               substr(f,m[n],m[n]-1+attr(m,"match.length")[n])
                           })
                }))
-    
+
     if(! all ( ynames %in% names(d) ))
        stop("Variable ",
             paste("'",ynames[ ! ynames %in% names(d) ],"'",
@@ -195,7 +204,7 @@ aggr <- function(d,factors=NULL,newcols=NULL,expand=FALSE,keep.numerics=FALSE) {
                      perl=TRUE);
 
     ## calculate aggregated column data
-    ## uses parallelization if package 'parallel' is installed 
+    ## uses parallelization if package 'parallel' is installed
     for(i in 1:length(newcols)) {
         cmd <- if(parallel)
                    paste("dnew$",newnames[i]," <- ",
