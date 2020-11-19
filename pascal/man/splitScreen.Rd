@@ -4,9 +4,22 @@
 \alias{splitScreen}
 \title{Parametric interface to split.screen}
 \usage{
-splitScreen(nx = 2, ny = 1, gapx = 0, gapy = 0, topy = 0,
-  bottomy = 0.2, leftx = 0.2, rightx = 0, byrow = TRUE,
-  debug = FALSE)
+splitScreen(
+  nx = 2,
+  ny = 1,
+  gapx = 0,
+  gapy = 0,
+  topy = 0,
+  bottomy = 0.2,
+  leftx = 0.2,
+  rightx = 0,
+  byrow = TRUE,
+  debug = FALSE,
+  addLeft = FALSE,
+  addRight = FALSE,
+  addBottom = FALSE,
+  addTop = FALSE
+)
 }
 \arguments{
 \item{nx, ny}{number of panels in horizontal and vertical direction}
@@ -22,6 +35,12 @@ byrow=TRUE) or top to bottom first and then left to right
 
 \item{debug}{logical. If true, `split.screen` is not called but the
 matrix with the panel dimensions returned}
+
+\item{addLeft, addRight, addBottom, addTop}{logicals indicating
+whether a 'padding' screen should be added at these borders. It
+can be used to place legends that span across panels, for
+example. These screens are added at the end of the regular
+screens, in order left, right, bottom and top (when enabled).}
 }
 \value{
 The matrix passed to `split.screen`

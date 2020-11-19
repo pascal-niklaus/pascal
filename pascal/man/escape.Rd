@@ -22,10 +22,10 @@ Note that the backslash is always escaped, since it is used as escape character.
 r<-escape(list("A:B","C:D"))
 r
 ## [[1]]
-## [1] "A\\\\003aB"
+## [1] "A\\003aB"
 ## 
 ## [[2]]
-## [1] "C\\\\003aD"
+## [1] "C\\003aD"
 unescape(r)
 ## [[1]]
 ## [1] "A:B"

@@ -4,19 +4,28 @@
 \alias{isect}
 \title{Intersect two lines}
 \usage{
-isect(x1, y1, x2, y2, segment = T)
+isect(x1, y1, x2, y2, segment = T, eps = 1e-06)
 }
 \arguments{
-\item{x1}{Vector or two specifying the end point x coordinates of first line}
+\item{x1}{Vector of two specifying the end point x coordinates of
+first line}
 
-\item{y1}{Vector or two specifying the end point y coordinates of first line}
+\item{y1}{Vector of two specifying the end point y coordinates of
+first line}
 
-\item{x2}{Vector or two specifying the end point x coordinates of second line}
+\item{x2}{Vector of two specifying the end point x coordinates of
+second line}
 
-\item{y2}{Vector or two specifying the end point y coordinates of second line}
+\item{y2}{Vector of two specifying the end point y coordinates of
+second line}
 
-\item{segment}{Logical determining whether the the lines are segments ending 
-at the end points specified, or whether the lines have infinite length.}
+\item{segment}{Logical determining whether the the lines are
+segments ending at the end points specified, or whether the
+lines have infinite length.}
+
+\item{eps}{tolerance for numeric comparisions of whether point lies
+within segment. This is important for horizontal or vertical
+lines where the x or y coordinates span no range.}
 }
 \value{
 Vector with coordinates of intersection \code{x,y}. These coordinates equal

@@ -4,8 +4,14 @@
 \alias{aov.ko}
 \title{Analysis of variance, preserving the specified order of factors in the model formula}
 \usage{
-aov.ko(formula, data = NULL, projections = FALSE, qr = TRUE,
-  contrasts = NULL, ...)
+aov.ko(
+  formula,
+  data = NULL,
+  projections = FALSE,
+  qr = TRUE,
+  contrasts = NULL,
+  ...
+)
 }
 \arguments{
 \item{formula}{see \code{aov} for details}

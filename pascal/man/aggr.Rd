@@ -4,8 +4,14 @@
 \alias{aggr}
 \title{Aggregates a Data Frame}
 \usage{
-aggr(d, factors = NULL, newcols = NULL, expand = FALSE,
-  keep.numerics = FALSE, schar = ":")
+aggr(
+  d,
+  factors = NULL,
+  newcols = NULL,
+  expand = FALSE,
+  keep.numerics = FALSE,
+  schar = ":"
+)
 }
 \arguments{
 \item{d}{Source data frame containing the data set to aggregate}

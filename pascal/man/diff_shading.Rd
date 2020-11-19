@@ -10,8 +10,7 @@ addpoly(mem, x, y1, y2)
 
 flushpoly(mem)
 
-newpoly(col = NULL, angle = NULL, density = NULL, lwd = NULL,
-  lty = NULL)
+newpoly(col = NULL, angle = NULL, density = NULL, lwd = NULL, lty = NULL)
 }
 \arguments{
 \item{mem}{list structure passing 'memory' parameters between calls. 

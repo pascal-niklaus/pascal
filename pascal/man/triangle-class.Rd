@@ -39,8 +39,14 @@
 \alias{plot}
 \title{Triangle Class.}
 \usage{
-triangle(sides = rep(NA, 3), angles = rep(NA, 3), x = NULL,
-  y = NULL, degrees = TRUE, simplify = TRUE)
+triangle(
+  sides = rep(NA, 3),
+  angles = rep(NA, 3),
+  x = NULL,
+  y = NULL,
+  degrees = TRUE,
+  simplify = TRUE
+)
 
 \S4method{grow}{triangle}(object, margins)
 
@@ -60,11 +66,9 @@ triangle(sides = rep(NA, 3), angles = rep(NA, 3), x = NULL,
 
 \S4method{area}{triangle}(object)
 
-\S4method{as.data.frame}{triangle}(x, row.names = letters[1:3],
-  optional = FALSE, ...)
+\S4method{as.data.frame}{triangle}(x, row.names = letters[1:3], optional = FALSE, ...)
 
-\S4method{plot}{triangle,missing}(x, which = c(1L:3L), add = FALSE,
-  ...)
+\S4method{plot}{triangle,missing}(x, which = c(1L:3L), add = FALSE, ...)
 }
 \arguments{
 \item{sides}{vector with the length of the three sides a, b and c.}
@@ -140,6 +144,7 @@ side and two angles, two angles and a side, and three angles and a
 side. Note that for a single angle that is not between the two
 sides, there can also be no or two solutions.
 
+
 Method to extract basic data:
 
 \code{sides} and \code{angles} extract the sides and angles. The
@@ -151,10 +156,12 @@ during triangle construction.
 \code{as.data.frame} returns a data frame with colums with the
 corner coordinates, angles, and side lengths.
 
+
 Methods to extract geometric data:
 
 \code{circumcircle} and \code{incircle} return a list with radius
 and center of these circles.
+
 
 Methods to manipulate triangle:
 
@@ -165,6 +172,7 @@ by \code{origin}.
 
 \code{transform2D} applies a 2D affine transformation to the
 triangle. The geometry (sides, angles) are adjusted accordingly.
+
 
 Methods to plot the triangle:
 

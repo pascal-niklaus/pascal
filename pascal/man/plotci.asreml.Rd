@@ -4,10 +4,24 @@
 \alias{plotci.asreml}
 \title{Plot confidence intervals based on ASReml predictions}
 \usage{
-plotci.asreml(data, formula = NULL, subset = NULL, backfun = I,
-  xfun = I, pts.col = NULL, pts.pch = 16, pts.cex = 1,
-  fill.col = NULL, line.lty = 1, line.lwd = 1, line.col = NULL,
-  ci.lty = 1, ci.lwd = 1, ci.col = NULL, ci.f = 1)
+plotci.asreml(
+  data,
+  formula = NULL,
+  subset = NULL,
+  backfun = I,
+  xfun = I,
+  pts.col = NULL,
+  pts.pch = 16,
+  pts.cex = 1,
+  fill.col = NULL,
+  line.lty = 1,
+  line.lwd = 1,
+  line.col = NULL,
+  ci.lty = 1,
+  ci.lwd = 1,
+  ci.col = NULL,
+  ci.f = 1
+)
 }
 \arguments{
 \item{data}{Data frame containing the result of a call to

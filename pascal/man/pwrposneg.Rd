@@ -31,14 +31,14 @@ have a common slope at x=0. This is achieved by applying an x-axis offset.
 data transformation function that differs for positive and negative values.
 The data transformation applied has the form
 
-\code{y = sign(y) * abs(x-xoffset)^xexp + yoffset},
+\code{y = sign(y) * abs(x-xoffset)^xexp + yoffset}, 
 
 where \code{xexp} is specified (\code{posexp} or \code{negexp}).
 \code{xoffset} is then chosen so that the slope at x=0 equals
 the one specified in the function call (\code{slope}).
 yoffset if chosen so that y=0 for x=0.
 In case of \code{posexp} or \code{negexp = "log"},
-the function applied is
+the function applied is 
 
 \code{y = sign(y) * log(x-xoffset) + yoffset},
 

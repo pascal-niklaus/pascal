@@ -25,8 +25,7 @@ transformation (get, set)
 
 drawing operations described separately in ?plot2D}
 \usage{
-gfx2D(tx = c(0, 0), ty = tx[2], sx = c(1, 1), sy = sx[2],
-  rot = 0)
+gfx2D(tx = c(0, 0), ty = tx[2], sx = c(1, 1), sy = sx[2], rot = 0)
 
 \S4method{show}{gfx2D}(object)
 

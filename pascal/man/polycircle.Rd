@@ -7,11 +7,18 @@
 \alias{polyrect}
 \title{Generate polygons}
 \usage{
-polycircle(x, y = NULL, r = NULL, rx = r, ry = rx,
-  pos = "center", phi = 0, n = 16)
+polycircle(
+  x,
+  y = NULL,
+  r = NULL,
+  rx = r,
+  ry = rx,
+  pos = "center",
+  phi = 0,
+  n = 16
+)
 
-polystar(x, y = NULL, r = NULL, r1 = r, r2 = r/2, phi = 0,
-  n = 5)
+polystar(x, y = NULL, r = NULL, r1 = r, r2 = r/2, phi = 0, n = 5)
 
 polyrect(x, y, w, h, pos = "center", phi = 0)
 }

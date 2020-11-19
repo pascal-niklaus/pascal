@@ -1,5 +1,5 @@
 #' Plot confidence intervals based on ASReml predictions
-#' 
+#'
 #' \code{plotci.asreml} adds predictions and confidence intervals to
 #' a plot. It offers the possibility to back-transform the predictions
 #' to the original scale by passing a user-defined function
@@ -30,7 +30,7 @@
 #' predicted values (which is part of the object returned by
 #' \code{asreml.predict}) and in the caller's frame. See the example
 #' provided below for a demonstration of this feature.
-#' 
+#'
 #' @param data     Data frame containing the result of a call to
 #'                 \code{predict.asreml}. For more flexibility, the elements
 #'                 $predictions or $predictions$pvals can also be supplied.
@@ -49,7 +49,7 @@
 #'                 plotting. Useful if the plot has the x axis transformed.
 #' @param pts.col  Color of the symbols showing predicted values
 #'                 (NULL = not plotted)
-#' @param pts.pch  Symbol for predicted values in plot 
+#' @param pts.pch  Symbol for predicted values in plot
 #' @param pts.cex  Scaling (size) of predicted values in plot
 #' @param fill.col Fill color for area between confidence intervals
 #'                 (NULL = not plotted)
@@ -61,7 +61,7 @@
 #' @param ci.lty   Line type for confidence intervals
 #' @param ci.lwd   Line width for confidence intervals
 #' @param ci.f     Number of standard errors for confidence intervals (default 1)
-#' 
+#'
 #' @examples
 #' ## The following code demonstrates the plotting of confidence intervals
 #' ## using predictions from ASReml, back-transformation to measurement scale,
@@ -72,11 +72,11 @@
 #' library(pascal)
 #' ex <- data.frame(x=rep(0:10,each=2), grp=LETTERS[1:2])
 #' ex$y <- exp(c(1,1.01)[ex$grp]+ex$x*c(.02,.12)[ex$grp]+rnorm(nrow(ex),sd=.2))
-#' 
+#'
 #' ex.asr <- asreml(log(y)~grp*x,data=ex)
 #'
 #' plot(ex$y~ex$x,col=c("red","blue")[ex$grp],data=ex)
-#' 
+#'
 #' xvec <- seq(0,10,length=20)
 #' ex.pred <- predict(
 #'     ex.asr,
@@ -102,32 +102,42 @@
 #' @importFrom graphics lines points plot polygon
 #' @export
 plotci.asreml <- function(data,
-                           formula=NULL,
-                           subset=NULL,
-                           backfun=I,
-                           xfun=I,
-                           pts.col=NULL,
-                           pts.pch=16,
-                           pts.cex=1,
-                           fill.col = NULL,
-                           line.lty=1,
-                           line.lwd=1,
-                           line.col=NULL,
-                           ci.lty=1,
-                           ci.lwd=1,
-                           ci.col=NULL,
-                           ci.f=1)
+                          formula=NULL,
+                          subset=NULL,
+                          backfun=I,
+                          xfun=I,
+                          pts.col=NULL,
+                          pts.pch=16,
+                          pts.cex=1,
+                          fill.col = NULL,
+                          line.lty=1,
+                          line.lwd=1,
+                          line.col=NULL,
+                          ci.lty=1,
+                          ci.lwd=1,
+                          ci.col=NULL,
+                          ci.f=1)
 {
-    ## zoom into prediction to find data frame with predictions 
+    ## zoom into prediction to find data frame with predictions
     if(class(data)[[1]]=="asreml")
         data <- data$predictions
     if(class(data)[[1]]=="list")
         data <- data$pvals
-    if( ! ( "asremlPredict" %in% class(data)
-           && all(c("predicted.value","standard.error") %in% names(data)) ))
+
+    ## different asreml versions use different classes
+    ## ugly temporary fix to make it work with v4.1
+    if( "asreml.predict" %in% class(data)) {
+        pred <- data$predicted.value
+        stderr <- data$std.error
+    } else if (  "asremlPredict" %in% class(data)) {
+        pred <- data$predicted.value
+        stderr <- data$standard.error
+    } else {
         stop("Cannot find predictions in argument 'data'")
+    }
+
     data <- as.data.frame(data)
-    
+
     mf <- match.call( expand.dots=FALSE )
 
     ## subset data
@@ -137,23 +147,25 @@ plotci.asreml <- function(data,
                     envir = data,
                     enclos = parent.frame())
         data <- data[idx, ]
+        pred <- pred[idx]
+        stderr <- stderr[idx]
     }
 
     ## column with x value
-    if(m[2] > 0) {        
+    if(m[2] > 0) {
         x <- eval( mf[[ m[2] ]][[2]] , data)
     } else {
         x <- data[,1]
     }
-    
-    ## transform data 
+
+    ## transform data
     x <- xfun(x)
-    y <- backfun(data$predicted.value)
-    ylo <- backfun(data$predicted.value - ci.f * data$standard.error)
-    yhi <- backfun(data$predicted.value + ci.f * data$standard.error)
-    
+    y <- backfun(pred)
+    ylo <- backfun(pred - ci.f * stderr)
+    yhi <- backfun(pred + ci.f * stderr)
+
     ## add elements to plot
-    if(!is.null(fill.col)) 
+    if(!is.null(fill.col))
         polygon(c(x,rev(x)), c(ylo,rev(yhi)), col=fill.col, border="#00000000")
     if(!is.null(line.col))
         lines(x, y, col=line.col, lty=line.lty, lwd=line.lwd)
@@ -161,6 +173,6 @@ plotci.asreml <- function(data,
         points(x, y, pch=pts.pch, cex=pts.cex, col=pts.col)
     if(!is.null(ci.col)) {
         lines(x,ylo,col=ci.col,lty=ci.lty,lwd=ci.lwd)
-        lines(x,yhi,col=ci.col,lty=ci.lty,lwd=ci.lwd)        
+        lines(x,yhi,col=ci.col,lty=ci.lty,lwd=ci.lwd)
     }
 }

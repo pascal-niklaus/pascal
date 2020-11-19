@@ -4,8 +4,16 @@
 \alias{resDivider}
 \title{Find closely matching values for resistor divider}
 \usage{
-resDivider(ratio, rmin = 1000, rmax = 1e+06, series = pascal::E24,
-  exponents = 0:6, n = 2, tol = 0.05, ntop = 10)
+resDivider(
+  ratio,
+  rmin = 1000,
+  rmax = 1e+06,
+  series = pascal::E24,
+  exponents = 0:6,
+  n = 2,
+  tol = 0.05,
+  ntop = 10
+)
 }
 \arguments{
 \item{ratio}{target ratio of lower resistor to total series

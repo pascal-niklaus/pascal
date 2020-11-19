@@ -4,8 +4,15 @@
 \alias{corner.label}
 \title{Plot label in corner of plot}
 \usage{
-corner.label(label = NULL, pos = "topleft", units = "char",
-  dist = 1, fun = NULL, frame = "plot", ...)
+corner.label(
+  label = NULL,
+  pos = "topleft",
+  units = "char",
+  dist = 1,
+  fun = NULL,
+  frame = "plot",
+  ...
+)
 }
 \arguments{
 \item{label}{Text to be plotted, if different from \code{NULL}}

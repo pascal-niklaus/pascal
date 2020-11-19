@@ -19,6 +19,12 @@
 #'     byrow=TRUE) or top to bottom first and then left to right
 #'     (byrow=FALSE)
 #'
+#' @param addLeft,addRight,addBottom,addTop logicals indicating
+#'     whether a 'padding' screen should be added at these borders. It
+#'     can be used to place legends that span across panels, for
+#'     example. These screens are added at the end of the regular
+#'     screens, in order left, right, bottom and top (when enabled).
+#'
 #' @param debug logical. If true, `split.screen` is not called but the
 #'     matrix with the panel dimensions returned
 #'
@@ -43,7 +49,11 @@ splitScreen <- function(nx=2, ny=1,
                         gapx=0, gapy=0,
                         topy=0, bottomy=0.2,
                         leftx=.2, rightx=0,
-                        byrow=TRUE, debug=FALSE)
+                        byrow=TRUE, debug=FALSE,
+                        addLeft=FALSE,
+                        addRight=FALSE,
+                        addBottom=FALSE,
+                        addTop=FALSE)
 {
     w <- (1-leftx-rightx-(nx-1)*gapx)/nx
     h <- (1-topy-bottomy-(ny-1)*gapy)/ny
@@ -56,6 +66,19 @@ splitScreen <- function(nx=2, ny=1,
                        bottomy+c(0,h)+(y-1)*(h+gapy))
         }
     }
+
+    left  <- min(m[,1])
+    right <- max(m[,2])
+    top <- max(m[,4])
+    bottom <- min(m[,3])
+    if(addLeft)
+        m <- rbind(m, c(0, left, bottom, top))
+    if(addRight)
+        m <- rbind(m, c(right, 1, bottom, top))
+    if(addBottom)
+        m <- rbind(m, c(left, right, 0, bottom))
+    if(addTop)
+        m <- rbind(m, c(left, right, top, 1))
     if(!debug)
         split.screen(m)
     invisible(m)

@@ -16,7 +16,7 @@ character vector with trimmed data
 Removes whitespace and tabulator characters at end of strings
 }
 \examples{
-trim.ws("  hello!  \\t")
+trim.ws("  hello!  \t")
 ## [1] "hello!"
 }
 \author{

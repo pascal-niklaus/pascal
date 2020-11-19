@@ -4,10 +4,21 @@
 \alias{plotellipse}
 \title{Draw confidence ellipse}
 \usage{
-plotellipse(data, columns = c(1, 2), subset = NULL, level = 0.67,
-  which = c(1, 2), fill.ellipse = NA, col.ellipse = "black",
-  col.ma = "black", lwd.ellipse = 1, lwd.ma = 1, lty.ellipse = 1,
-  lty.ma = 1, caps = 0)
+plotellipse(
+  data,
+  columns = c(1, 2),
+  subset = NULL,
+  level = 0.67,
+  which = c(1, 2),
+  fill.ellipse = NA,
+  col.ellipse = "black",
+  col.ma = "black",
+  lwd.ellipse = 1,
+  lwd.ma = 1,
+  lty.ellipse = 1,
+  lty.ma = 1,
+  caps = 0
+)
 }
 \arguments{
 \item{data}{data frame or matrix with x and y values}

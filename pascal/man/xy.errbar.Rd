@@ -4,9 +4,21 @@
 \alias{xy.errbar}
 \title{Plot error bars}
 \usage{
-xy.errbar(x, y, yplus = NULL, yminus = NULL, xplus = NULL,
-  xminus = NULL, yerr = NULL, xerr = NULL, cap = 0.015, lty = 1,
-  lwd = 1, add = FALSE, ...)
+xy.errbar(
+  x,
+  y,
+  yplus = NULL,
+  yminus = NULL,
+  xplus = NULL,
+  xminus = NULL,
+  yerr = NULL,
+  xerr = NULL,
+  cap = 0.015,
+  lty = 1,
+  lwd = 1,
+  add = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{vector of x coordinates of data points to be fitted with error bars}

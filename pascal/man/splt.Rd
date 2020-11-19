@@ -4,8 +4,15 @@
 \alias{splt}
 \title{Split a data frame}
 \usage{
-splt(d, by, to.split, factors = NULL, new.names = NULL,
-  expand = FALSE, sep = ":")
+splt(
+  d,
+  by,
+  to.split,
+  factors = NULL,
+  new.names = NULL,
+  expand = FALSE,
+  sep = ":"
+)
 }
 \arguments{
 \item{d}{Source data frame containing the data set to split}

@@ -4,9 +4,20 @@
 \alias{emptyPlot}
 \title{Provides an empty plot}
 \usage{
-emptyPlot(xlim = c(0, 1), ylim = c(0, 1), asp = NA, xpd = NA,
-  xlab = "", ylab = "", bty = "n", xaxs = "i", yaxs = "i",
-  xaxt = "n", yaxt = "n", ...)
+emptyPlot(
+  xlim = c(0, 1),
+  ylim = c(0, 1),
+  asp = NA,
+  xpd = NA,
+  xlab = "",
+  ylab = "",
+  bty = "n",
+  xaxs = "i",
+  yaxs = "i",
+  xaxt = "n",
+  yaxt = "n",
+  ...
+)
 }
 \arguments{
 \item{xlim, ylim}{extents of plot. Defaults to c(0,1) for both axis.}

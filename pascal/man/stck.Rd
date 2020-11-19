@@ -4,8 +4,14 @@
 \alias{stck}
 \title{Stack a data frame}
 \usage{
-stck(d, factors = NULL, covars = NULL, to.stack, cat.names = NULL,
-  expand = FALSE)
+stck(
+  d,
+  factors = NULL,
+  covars = NULL,
+  to.stack,
+  cat.names = NULL,
+  expand = FALSE
+)
 }
 \arguments{
 \item{d}{Source data frame containing the data set to stack}

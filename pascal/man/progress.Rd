@@ -8,8 +8,14 @@
 \alias{progressPct}
 \title{Progress bar}
 \usage{
-progressInit(steps = 10, pre = "[", post = "]", done = "*",
-  spc = "-", maxwidth = 60)
+progressInit(
+  steps = 10,
+  pre = "[",
+  post = "]",
+  done = "*",
+  spc = "-",
+  maxwidth = 60
+)
 
 progressBar(step = 0)
 

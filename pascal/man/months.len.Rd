@@ -4,7 +4,9 @@
 \name{months.len}
 \alias{months.len}
 \title{Length of months in a regular (non-leap) year}
-\format{An object of class \code{integer} of length 12.}
+\format{
+An object of class \code{integer} of length 12.
+}
 \usage{
 months.len
 }

@@ -18,7 +18,7 @@ Calculate area of polygon.
 \details{
 The area of the polygon is calculated using the shoelace method,
 after translation towards the origin to improve numeric accurary.
-The polygon passed can be a list of subpolygons.
+The polygon passed can be a list of subpolygons. 
 
 Simple polygons are lists and must have elements \code{x} and
 \code{y}. More complex shapes are lists of polygons. Polygons with

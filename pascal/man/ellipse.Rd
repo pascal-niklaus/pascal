@@ -4,8 +4,7 @@
 \alias{ellipse}
 \title{Confidence ellipse}
 \usage{
-ellipse(data = NULL, cov = NULL, center = NULL, level = 0.95,
-  npoints = 100)
+ellipse(data = NULL, cov = NULL, center = NULL, level = 0.95, npoints = 100)
 }
 \arguments{
 \item{data}{data frame or matrix with x and y values in first and

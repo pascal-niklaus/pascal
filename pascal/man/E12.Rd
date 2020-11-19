@@ -4,7 +4,9 @@
 \name{E12}
 \alias{E12}
 \title{Resistor E12 series values}
-\format{An vector of class \code{"numeric"}}
+\format{
+An vector of class \code{"numeric"}
+}
 \usage{
 data(E12)
 }
