@@ -23,7 +23,7 @@
 \alias{similar}
 \alias{to}
 \alias{the}
-\alias{\code{\link[graphics]{polygon}}}
+\alias{polygon}
 \alias{function.}
 \alias{points2D,gfx2D-method}
 \alias{points2D}

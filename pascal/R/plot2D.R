@@ -1,4 +1,4 @@
-######################################################################
+#####################################################################
 ###
 ### plotting methods of gfx2D class
 ###
@@ -119,7 +119,7 @@ safeSetGeneric(name = "polygon2D",
 #' @aliases polygon2D,gfx2D,ANY-method
 #'
 #' \code{polygon2D} draws a polygon, similar to the
-#' \code{\link[graphics]{polygon}} function.
+#' \code{polygon} function.
 #'
 #'
 #' @export
