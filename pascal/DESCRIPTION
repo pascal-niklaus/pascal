@@ -1,9 +1,9 @@
 Package: pascal
 Type: Package
 Title: Pascal's library
-Version: 1.11
+Version: 1.12
 Encoding: UTF-8
-Date: 2020-11-19
+Date: 2020-12-09
 Author: Pascal A. Niklaus
 Maintainer: Pascal A. Niklaus <pascal.niklaus@ieu.uzh.ch>
 Depends: R (>= 3.0.0)
