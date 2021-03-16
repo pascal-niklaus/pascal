@@ -21,7 +21,8 @@ all objects and functions:
 
 addColumns : function (trg, src, key, cols, after = TRUE)  
 addpoly : function (mem, x, y1, y2)  
-aggr : function (d, factors = NULL, newcols = NULL, expand = FALSE, keep.numerics = FALSE)  
+aggr : function (d, factors = NULL, newcols = NULL, expand = FALSE, keep.numerics = FALSE, 
+    schar = ":")  
 angles : Formal class 'standardGeneric' [package "methods"] with 8 slots
 aov.ftest : function (aovobj, test.formula, table = FALSE)  
 aov.ko : function (formula, data = NULL, projections = FALSE, qr = TRUE, contrasts = NULL, 
@@ -32,6 +33,7 @@ arrows2D : Formal class 'standardGeneric' [package "methods"] with 8 slots
 as.data.frame : Formal class 'standardGeneric' [package "methods"] with 8 slots
 asreml.nvc : function (...)  
 binvar : function (x, frac, width = 1)  
+bottom.axis : function (...)  
 catenary : function (x, a = NULL, dx = 1, y1 = 0, y2 = 0, smax = NULL)  
 catenary_normal : function (x, a = NULL, dx = 1, y1 = 0, y2 = 0, smax = NULL)  
 checkSink : function ()  
@@ -65,7 +67,9 @@ getResolution : function ()
 gfx2D : function (tx = c(0, 0), ty = tx[2], sx = c(1, 1), sy = sx[2], rot = 0)  
 glimpse : function (..., len = 5, pre = 1, post = 0, between = 1)  
 greatestCommonDenominator : function (a, b)  
+groupSpace : function (d, cols)  
 grow : Formal class 'standardGeneric' [package "methods"] with 8 slots
+guess_decompressor : function (file)  
 heading : function (txt = NULL, width = 80, right = FALSE, bottom = FALSE, char = "#", 
     spc = "  ", side.char = char, corner.char = rep(char, 4), post = 1, 
     pre = 0, center = FALSE)  
@@ -73,9 +77,12 @@ identity2D : function ()
 incircle : Formal class 'standardGeneric' [package "methods"] with 8 slots
 indexof : function (d = NULL, col = NULL)  
 invcloglog : function (x)  
-isect : function (x1, y1, x2, y2, segment = T)  
+isect : function (x1, y1, x2, y2, segment = T, eps = 1e-06)  
 killfactors : function (d, restore.numerics = FALSE, cols = seq_along(names(d)))  
+label : function (x, y, label = NULL, units = c("native", "lines"), just = "center", 
+    rot = 0, fun = NULL, frame = "plot", ...)  
 leastCommonMultiple : function (a, b = NULL)  
+left.axis : function (...)  
 lines2D : Formal class 'standardGeneric' [package "methods"] with 8 slots
 logstc : function (x, a = 1, b = 1, tau = 1)  
 logstc.der : function (x, a = 1, b = 1, tau = 1)  
@@ -83,7 +90,10 @@ logstc.der2 : function (x, a = 1, b = 1, tau = 1)
 max_NAsafe : function (x)  
 mean_NAsafe : function (x)  
 median_NAsafe : function (x)  
+memused : function (print = TRUE, total = TRUE, objs = TRUE, top = 10, base2 = FALSE, 
+    env = globalenv())  
 min_NAsafe : function (x)  
+modalpha : function (x, k = NULL, alpha = NULL)  
 months.len :  int [1:12] 31 28 31 30 31 30 31 31 30 31 ...
 NAtozero : function (x)  
 newpoly : function (col = NULL, angle = NULL, density = NULL, lwd = NULL, lty = NULL)  
@@ -109,6 +119,10 @@ progressInit : function (steps = 10, pre = "[", post = "]", done = "*", spc = "-
 progressPct : function (step = 0)  
 progressStep : function ()  
 progressStep0 : function ()  
+pwr10label : function (x, ndec = 1, exp = floor(log10(abs(x))), expOnly = FALSE)  
+read_filtered : function (file, condition, decompressor = NULL, sep = ",", debug = FALSE, 
+    ...)  
+read_partial : function (file, lines = c(1, NA), decompressor = NULL, debug = FALSE, ...)  
 rect2D : Formal class 'standardGeneric' [package "methods"] with 8 slots
 reflectx2D : function ()  
 reflectxy2D : function ()  
@@ -116,7 +130,9 @@ reflecty2D : function ()
 reload.pascal : function ()  
 resDivider : function (ratio, rmin = 1000, rmax = 1e+06, series = pascal::E24, exponents = 0:6, 
     n = 2, tol = 0.05, ntop = 10)  
+right.axis : function (...)  
 rotate2D : function (theta)  
+rxmatches : function (x, m)  
 safen : function (x)  
 safeSample : function (x, size, replace = FALSE, prob = NULL)  
 scale2D : function (kx, ky = kx)  
@@ -138,7 +154,8 @@ Sink : function (...)
 snapToGrid : function (d, theta = 0, sz = 1, which = "points")  
 sorted.code : function (..., split = NULL, collapse = NULL)  
 splitScreen : function (nx = 2, ny = 1, gapx = 0, gapy = 0, topy = 0, bottomy = 0.2, 
-    leftx = 0.2, rightx = 0, byrow = TRUE, debug = FALSE)  
+    leftx = 0.2, rightx = 0, byrow = TRUE, debug = FALSE, addLeft = FALSE, 
+    addRight = FALSE, addBottom = FALSE, addTop = FALSE)  
 splittxt : function (x, n = 80)  
 splt : function (d, by, to.split, factors = NULL, new.names = NULL, expand = FALSE, 
     sep = ":")  
@@ -147,6 +164,7 @@ stck : function (d, factors = NULL, covars = NULL, to.stack, cat.names = NULL,
 suc : function (x)  
 test.asreml : function (d.asr, returnWald = FALSE, silent = FALSE)  
 text2D : Formal class 'standardGeneric' [package "methods"] with 8 slots
+top.axis : function (...)  
 trailer : function (txt = NULL, width = 80, right = FALSE, char = "#", spc = "  ", 
     side.char = char, corner.char = rep(char, 4), post = 1, pre = 0, center = FALSE)  
 transform2D : Formal class 'standardGeneric' [package "methods"] with 8 slots
@@ -160,12 +178,13 @@ unescape : function (x)
 var_NAsafe : function (x)  
 vector.crossprod : function (a, b)  
 vector.norm : function (x, p = 2)  
+xpand : function (formula, data, verbose = FALSE, cols = NULL, unit = NULL, unname = FALSE, 
+    expand = FALSE)  
 xtreme : function (x, f = 3.5)  
 xy.errbar : function (x, y, yplus = NULL, yminus = NULL, xplus = NULL, xminus = NULL, 
     yerr = NULL, xerr = NULL, cap = 0.015, lty = 1, lwd = 1, add = FALSE, 
     ...)  
 Zr : function (F, dendf, df = 1)  
-
 
 ### Deprecated
 
