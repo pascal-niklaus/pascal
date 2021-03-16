@@ -89,7 +89,8 @@ memused <- function(print=TRUE, total=TRUE, objs=TRUE, top=10, base2=FALSE, env=
             r <- r[order(r$bytes, decreasing = TRUE),,drop=FALSE]
 
             if (nrow(r)>top) {
-                r$type[top] <- sprintf("%d objects",nrow(r)-top+1)
+                r$class[top] <- sprintf("%d objects",nrow(r)-top+1)
+                r$type[top] <- ""
                 rownames(r)[top]<-"..."
                 r$bytes[top] <- sum(r$bytes[top:nrow(r)])
                 r<- r[1:top,]

@@ -64,7 +64,7 @@ for(i in 1:6) {
   par(mai=c(0,0,0,0))
   plot(rnorm(10))
 }
-close.screen()
+close.screen(all.screens=TRUE)
 
 }
 \seealso{

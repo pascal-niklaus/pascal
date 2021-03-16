@@ -41,7 +41,7 @@
 #'   par(mai=c(0,0,0,0))
 #'   plot(rnorm(10))
 #' }
-#' close.screen()
+#' close.screen(all.screens=TRUE)
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export

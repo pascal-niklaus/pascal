@@ -80,3 +80,105 @@ corner.label <- function(label=NULL,pos="topleft",units="char",dist=1,fun=NULL,f
     }
     grid::popViewport(n=i)
 }
+
+#' Add label to plot
+#'
+#' \code{label} plots a label at positions that can be specified in
+#' different units.
+#'
+#' This function facilitates the labelling of plots. Using
+#' \code{grid}-graphics, text is plotted somewhere in or outside the
+#' plot.  These position can be specified in different units,
+#' including relative to the size of characters. In addition, a
+#' user-provided function can be called before printing the
+#' label. This could, for example, be used to first draw a background.
+#'
+#' @param x,y Coordinates of the labels
+#'
+#' @param label Text to be plotted
+#'
+#' @param fun If not \code{NULL}, this arbitrary
+#'     \code{function(x,y,...)} is called to performs some plotting
+#'     before the text \code{txt} is typeset. See examples.
+#'
+#' @param just Justification of label. Defaults to "center"
+#'
+#' @param rot Angle at which label is printed. Defaults to zero.
+#'
+#' @param units Units of the coordinates of the labels. Default is
+#'     \code{"native"} for X and \code{"lines"} for Y. Check
+#'     \code{?grid::unit} for the many options available.
+#'
+#' @param frame Either of 'inner', 'figure', or 'plot'. Indicates the
+#'     area that is to be labelled. 'inner' is the entire page area
+#'     except the margins. 'figure' is the figure area. 'plot' is the
+#'     area used for plotting (inside the axis). Defaults to 'plot'.
+#'
+#' @param ... Extra parameters passed when calling
+#'     \code{grid.text}. Check \code{?gpar} for options.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' #### Simple bar plot example
+#'
+#' ## create bar plot with error bars; the location of the bar is returned by 'barplot'
+#' d <- aggr(CO2, c("Type","Treatment"), c("uptake=mean(uptake)","se=se(uptake)"))
+#' d$x <- barplot(d$uptake, space=groupSpace(d, "Type")*.5, ylim=c(0,40), ylab="")
+#' xy.errbar(d$x, d$uptake, yerr =d$se, cap=0.08, add=TRUE)
+#'
+#' ## calculate label positions
+#' d2 <- aggr(d, "Type", "x=mean(x)")
+#' label(d2$x, -1.5, d2$Type)
+#'
+#' ## add axes labels
+#' label(mean(d2$x),-2.5, "Type", fontsize=15, fontface="bold")
+#' label(-2.5,20, units=c("lines","native"), "Uptake", fontsize=15, fontface="bold", rot=90)
+#'
+#' #### Example of how to use th 'fun' argument
+#'
+#' plot(NULL,xlim=c(0,1), ylim=c(0,1), xlab="", ylab="")
+#' x <- runif(12)
+#' y <- runif(12)
+#' for(i in 1:12) {
+#'     label(x[i], y[i], month.name[i],
+#'           units=c("native", "native"),
+#'           fun=function(x, y, txt,...)
+#'               grid::grid.rect(
+#'                         x, y,
+#'                         width=grid::unit(1,"strwidth",txt)+grid::unit(1,"char"),
+#'                         height=grid::unit(1,"strheight", txt)+grid::unit(1,"char"),
+#'                         gp=grid::gpar(col="red",fill="yellow")),
+#'           col="blue", fontface="bold")
+#' }
+#' }
+#' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @export
+label <- function(x, y, label=NULL, units=c("native", "lines"),
+                         just = "center", rot=0,
+                         fun=NULL, frame="plot", ...) {
+    requireNamespace("gridBase")
+    requireNamespace("grid")
+
+    frame.opts <- c("inner","figure","plot")
+    frame <- which(frame==frame.opts)
+    if(length(frame)==0)
+        stop("frame must be one of ",
+             paste(paste("'",frame.opts,"'",sep=""),
+                   collapse=", "))
+
+    vps <- gridBase::baseViewports()
+
+    for(i in 1:frame)
+        grid::pushViewport(vps[[i]])
+
+    xx <- grid::unit(x, units[1])
+    yy <- grid::unit(y, units[2])
+
+    if(!is.null(fun))
+        fun(xx, yy, label, ...)
+    if(!is.null(label))
+        grid::grid.text(label, x=xx, y=yy, rot=rot, just=just,
+                        gp=grid::gpar(...))
+    grid::popViewport(n=i)
+}
