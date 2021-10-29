@@ -4,33 +4,28 @@
 \alias{addColumns}
 \title{Add columns to data.frame}
 \usage{
-addColumns(trg, src, key, cols, after = TRUE)
+addColumns(trg, src, key, cols, after = NULL, before = NULL)
 }
 \arguments{
 \item{trg, src}{target and source \code{data.frame}s}
 
 \item{key}{key column(s). Either a single name, in which case it
-applies to both source and target, or a vector of two, with
-first and second applying to target and source, respectively.}
+applies to both source and target, or a string of the form
+\code{"key1=key2"} where the first and second apply to target and
+source, respectively. Multiple keys may be passed.}
 
 \item{cols}{names of columns to copy to target. The columns can be
 renamed by using the form \code{"new=old"}.}
 
-\item{after}{logical. Indicated whether the new columns are placed
-right after the key column (default, after=TRUE), or before the
-key column (adter=FALSE). The new columns always are in the
-order in which they were specified.}
+\item{after, before}{string. Indicates after or before which of the
+existing columns the new columns should be inserted. Default is
+to append them to the right of existing columns.}
 }
 \value{
 target data frame amended with columns.
 }
 \description{
 Adds columns from another data.frame based on a key.
-}
-\details{
-This is useful when In meta-analyses, one often uses Z-transformed effect sizes.  This
-function returns such effect sizes, computed from F values and
-associated nominator and denominator degrees of freedom.
 }
 \examples{
 

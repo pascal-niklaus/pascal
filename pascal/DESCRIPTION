@@ -12,5 +12,5 @@ Suggests: MASS, parallel, asreml, grid, gridBase, GenSA, bigmemory,
 Imports: methods
 Description: Pascal's collection of functions.
 License: GPL (>=2)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 LazyData: true

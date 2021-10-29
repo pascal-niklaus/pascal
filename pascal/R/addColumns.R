@@ -2,23 +2,19 @@
 #'
 #' Adds columns from another data.frame based on a key.
 #'
-#' This is useful when In meta-analyses, one often uses Z-transformed effect sizes.  This
-#' function returns such effect sizes, computed from F values and
-#' associated nominator and denominator degrees of freedom.
-#'
 #' @param trg,src target and source \code{data.frame}s
 #'
 #' @param key key column(s). Either a single name, in which case it
-#'     applies to both source and target, or a vector of two, with
-#'     first and second applying to target and source, respectively.
+#'     applies to both source and target, or a string of the form
+#'     \code{"key1=key2"} where the first and second apply to target and
+#'     source, respectively. Multiple keys may be passed.
 #'
 #' @param cols names of columns to copy to target. The columns can be
 #'     renamed by using the form \code{"new=old"}.
 #'
-#' @param after logical. Indicated whether the new columns are placed
-#'     right after the key column (default, after=TRUE), or before the
-#'     key column (adter=FALSE). The new columns always are in the
-#'     order in which they were specified.
+#' @param after,before string. Indicates after or before which of the
+#'     existing columns the new columns should be inserted. Default is
+#'     to append them to the right of existing columns.
 #'
 #' @return target data frame amended with columns.
 #' @examples
@@ -34,16 +30,29 @@
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-addColumns <- function(trg, src, key, cols, after=TRUE) {
-    key <- rep(key,2)[1:2]
-    icol <- which(names(trg)==key[1])
-    idx <- match(trg[[key[1]]],src[[key[2]]])
+addColumns <- function(trg, src, key, cols, after=NULL, before=NULL) {
+    key <- lapply(strsplit(key, "="), function(x) rep(x,2)[1:2])
+    trgidx <- sapply(key, function(x) which(names(trg)==x[1]))
+    srcidx <- sapply(key, function(x) which(names(src)==x[2]))
+    trgkey <- apply(trg[, trgidx, drop=FALSE], 1, function(x) paste(x, collapse="\u2055"))
+    srckey <- apply(src[, srcidx, drop=FALSE], 1, function(x) paste(x, collapse="\u2055"))
+    idx <- match(trgkey, srckey)
+    if (max(sapply(srckey, function(x) sum(trgkey==x)))>1)
+        warning("Match of keys is not unique: returning values of first match")
+
+    if (is.null(after) && is.null(before))
+        icol <- ncol(trg)
+    else
+        icol <- which(names(trg)==c(after, before))
+
+    if (length(icol) == 0)
+        stop("Illegal 'after' column specified")
     tcols <- gsub("^([^=]+) *= *(.+)$","\\1",cols,perl=TRUE)
     scols <- gsub("^([^=]+) *= *(.+)$","\\2",cols,perl=TRUE)
     for(v in seq_along(scols))
         trg[[tcols[v]]] <- src[[scols[v]]][idx]
     tcol <- match(tcols, names(trg))
-    if(after)
+    if (is.null(before))
         trg[,c(1:icol, tcol, setdiff(1:ncol(trg),c(1:icol,tcol)))]
     else
         trg[,c(setdiff(1:icol,icol), tcol, icol, setdiff(1:ncol(trg),c(1:icol,tcol)))]

@@ -4,7 +4,7 @@
 \alias{sorted.code}
 \title{Create unique ID from separate parts that are sorted}
 \usage{
-sorted.code(..., split = NULL, collapse = NULL)
+sorted.code(..., split = NULL, collapse = NULL, unique = FALSE)
 }
 \arguments{
 \item{...}{data to be combined, in one of the forms outlined above}
@@ -12,6 +12,9 @@ sorted.code(..., split = NULL, collapse = NULL)
 \item{split}{character separating parts, if parts already combined in strings}
 
 \item{collapse}{character used to merge parts after sorting}
+
+\item{unique}{logical indicating whether code elements should be
+unique or whether parts may be repeated}
 }
 \value{
 vector of strings with merged parts
@@ -28,7 +31,7 @@ The parts to be merged can be passed in four different forms:
    \item as elements in separate (parallel) vectors.
    \item as a matrix with parts to be combined in rows.
    \item as string, separated by a character specified in \code{split}.
-   \item as list of vectors. 
+   \item as list of vectors.
 }
 The two last forms are useful if variable numbers of parts are to be combined.
 }
@@ -38,7 +41,7 @@ v2 <- sample(LETTERS,10)
 m <- cbind(v1,v2)
 sorted.code(v1,v2,collapse="-")   # case 1
 sorted.code(m,collapse="-")       # case 2
-sorted.code(c("a:b:c","z:x:y","b:a"),split=":",collapse="-") # case 3 
+sorted.code(c("a:b:c","z:x:y","b:a"),split=":",collapse="-") # case 3
 sorted.code(list(c("a","b","c"),c("z","y")),collapse="-")    # case 4
 }
 \author{
