@@ -1,6 +1,6 @@
 Package: pascal
 Type: Package
-Title: Pascal's library
+Title: Pascal's Library
 Version: 1.13
 Encoding: UTF-8
 Date: 2021-03-16
@@ -10,7 +10,7 @@ Depends: R (>= 3.0.0)
 Suggests: MASS, parallel, asreml, grid, gridBase, GenSA, bigmemory,
         synchronicity
 Imports: methods
-Description: Pascal's collection of functions.
+Description: Collection of functions used by Pascal.
 License: GPL (>=2)
 RoxygenNote: 7.1.2
 LazyData: true

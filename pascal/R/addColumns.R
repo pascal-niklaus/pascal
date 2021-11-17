@@ -22,11 +22,11 @@
 #' data(CO2, package="datasets")
 #'
 #' d <- aggr(CO2,"Plant", "mean.uptake=mean(uptake)")
-#' addColumns(d, CO2, "Plant",c("Type","Treatment"))
+#' addColumns(d, CO2, "Plant", c("Type","Treatment"))
 #'
 #' ## differnet key columns, and column renaming
 #' d <- aggr(CO2,"p=Plant", "mean.uptake=mean(uptake)")
-#' addColumns(d, CO2, c("p","Plant"),c("name=Type","chilled=Treatment"))
+#' addColumns(d, CO2, p=Plant", c("name=Type","chilled=Treatment"))
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
