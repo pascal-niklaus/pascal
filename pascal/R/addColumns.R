@@ -31,29 +31,35 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
 addColumns <- function(trg, src, key, cols, after=NULL, before=NULL) {
-    key <- lapply(strsplit(key, "="), function(x) rep(x,2)[1:2])
+    key <- lapply(strsplit(key, "="), function(x) rep(x, 2)[1:2])
     trgidx <- sapply(key, function(x) which(names(trg)==x[1]))
     srcidx <- sapply(key, function(x) which(names(src)==x[2]))
     trgkey <- apply(trg[, trgidx, drop=FALSE], 1, function(x) paste(x, collapse="\u2055"))
     srckey <- apply(src[, srcidx, drop=FALSE], 1, function(x) paste(x, collapse="\u2055"))
     idx <- match(trgkey, srckey)
-    if (max(sapply(srckey, function(x) sum(trgkey==x)))>1)
+    if (max(sapply(trgkey, function(x) sum(srckey==x)))>1)
         warning("Match of keys is not unique: returning values of first match")
 
     if (is.null(after) && is.null(before))
         icol <- ncol(trg)
     else
-        icol <- which(names(trg)==c(after, before))
+        icol <- which(names(trg) %in% c(after, before))
+    if (length(icol) != 1)
+        stop("Illegal 'after' or 'before' column specified")
 
-    if (length(icol) == 0)
-        stop("Illegal 'after' column specified")
-    tcols <- gsub("^([^=]+) *= *(.+)$","\\1",cols,perl=TRUE)
-    scols <- gsub("^([^=]+) *= *(.+)$","\\2",cols,perl=TRUE)
+    tcols <- gsub("^([^=]+) *= *(.+)$", "\\1", cols, perl=TRUE)
+    scols <- gsub("^([^=]+) *= *(.+)$", "\\2", cols, perl=TRUE)
+
     for(v in seq_along(scols))
         trg[[tcols[v]]] <- src[[scols[v]]][idx]
+
     tcol <- match(tcols, names(trg))
     if (is.null(before))
-        trg[,c(1:icol, tcol, setdiff(1:ncol(trg),c(1:icol,tcol)))]
+        trg[,c(setdiff(1:icol, tcol),
+               tcol,
+               setdiff(1:ncol(trg), c(1:icol,tcol)))]
     else
-        trg[,c(setdiff(1:icol,icol), tcol, icol, setdiff(1:ncol(trg),c(1:icol,tcol)))]
+        trg[,c(setdiff(1:icol, c(icol, tcol)),
+               unique(c(tcol, icol)),
+               setdiff(1:ncol(trg), c(1:icol, tcol)))]
 }

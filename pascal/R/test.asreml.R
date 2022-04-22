@@ -51,7 +51,7 @@ test.asreml <- function(d.asr,returnWald=FALSE,silent=FALSE)
     cat("CALL:\n");  
     print(d.asr$call);
   } else {
-    capture.output(tab <- asreml::wald(d.asr,denDF="default"));
+    capture.output(tab <- asreml::wald.asreml(d.asr,denDF="default"));
     digits <- max(getOption("digits") - 2, 3) 
     signif.stars = getOption("show.signif.stars")
     nc <- dim(tab$Wald)[2L]

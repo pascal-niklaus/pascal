@@ -2,9 +2,12 @@
 % Please edit documentation in R/killfactors.R
 \name{killfactors}
 \alias{killfactors}
-\title{Remove factors property from data frame columns}
+\alias{restorefactors}
+\title{Remove or add factor property of data.frame columns}
 \usage{
 killfactors(d, restore.numerics = FALSE, cols = seq_along(names(d)))
+
+restorefactors(d, cols = seq_along(names(d)))
 }
 \arguments{
 \item{d}{Source data frame containing the data set to aggregate}
@@ -24,6 +27,12 @@ numeric of character vectors.  R automatically converts strings to
 factors when data frames are created. This is not always desired,
 and \code{killFactors} will ``undo'' this behaviour.
 }
+\details{
+\code{restorefactors} does the opposite: it converts character
+columns into factors. Alternatively, columns may be specified by
+name or index, and these are turned into factors regardless of
+their type.
+}
 \examples{
 d <- data.frame(c1=LETTERS[1:5],c2=factor(1:5),c3=1:5)
 str(d)
@@ -31,17 +40,22 @@ str(d)
 ##  $ c1: Factor w/ 5 levels "A","B","C","D",..: 1 2 3 4 5
 ##  $ c2: Factor w/ 5 levels "1","2","3","4",..: 1 2 3 4 5
 ##  $ c3: int  1 2 3 4 5
-str(killfactors(d))
+d2 <- killfactors(d)
+str(d2)
 ## 'data.frame':	5 obs. of  3 variables:
 ##  $ c1: chr  "A" "B" "C" "D" ...
 ##  $ c2: chr  "1" "2" "3" "4" ...
 ##  $ c3: int  1 2 3 4 5
-str(killfactors(d,restore.numerics = TRUE))
+str(killfactors(d, restore.numerics = TRUE))
 ## 'data.frame':	5 obs. of  3 variables:
 ##  $ c1: chr  "A" "B" "C" "D" ...
 ##  $ c2: num  1 2 3 4 5
 ##  $ c3: int  1 2 3 4 5
-
+str(restorefactors(d2, cols=c("c1","c3")))
+## 'data.frame':	5 obs. of  3 variables:
+## $ c1: Factor w/ 5 levels "A","B","C","D",..: 1 2 3 4 5
+## $ c2: chr  "1" "2" "3" "4" ...
+## $ c3: Factor w/ 5 levels "A","B","C","D",..: 1 2 3 4 5
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}

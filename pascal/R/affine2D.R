@@ -107,13 +107,12 @@ identity2D <- function()
 #' plot(d,xlim=c(0,5),ylim=c(-1,4),asp=1)
 #' d2 <- apply2D(rotate2D(-pi/6)%*%scale2D(1.5,1.5), d)
 #' points(d2,col="red")
-#' ## none so far...
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
 apply2D <- function(m,x,y=NULL)
 {
     xy <- xy.coords(x,y)
-    if(class(m)=="gfx2D")
+    if("gfx2D" %in% class(m))
         m <- m@m
     tmp <- m %*% matrix(c(xy$x,xy$y,rep(1,length(xy$x))),nrow=3,byrow=TRUE)
     list(x=tmp[1,],y=tmp[2,])

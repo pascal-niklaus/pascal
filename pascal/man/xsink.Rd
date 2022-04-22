@@ -7,7 +7,7 @@
 \alias{checkSink}
 \title{Sink that can be enabled/disabled}
 \usage{
-Sink(...)
+Sink(..., width = NA)
 
 enableSink(enabled = TRUE)
 
@@ -18,18 +18,25 @@ checkSink()
 \arguments{
 \item{...}{parameters passed to \code{sink}}
 
+\item{width}{width of output when printing to sink. When the sink
+is closed, the original output is restored. Note that sinks
+cannot be nested.}
+
 \item{enabled}{TRUE to enable and FALSE to disable sinking.}
 }
 \value{
-\code{checkSink()} will return TRUE if sinking is enabled, FALSE otherwise.
+\code{checkSink()} will return TRUE if sinking is enabled,
+    FALSE otherwise.
 }
 \description{
 Often, one sinks results to a file. During debugging, this may be
-disadvantageous because the output and important messages may be invisible on the console.
-Combining each sink command with a separate \code{if(sinkEnabled) { ... }} appears cumbersome,
-and so does commenting out the respective lines.
-\code{Sink}, \code{enableSink}, and \code{enableSink} offer alternatives.
-Essentially, the \code{Sink(...)} command is only effective if enabled.
+disadvantageous because the output and important messages may be
+invisible on the console.  Combining each sink command with a
+separate \code{if(sinkEnabled) { ... }} appears cumbersome, and so
+does commenting out the respective lines.  \code{Sink},
+\code{enableSink}, and \code{enableSink} offer alternatives.
+Essentially, the \code{Sink(...)} command is only effective if
+enabled.
 }
 \examples{
 enableSink()
