@@ -101,126 +101,155 @@ aggr <- function(d,
                  expand=FALSE,
                  keep.numerics=FALSE,
                  schar=":") {
-    parallel <- (Sys.info()["sysname"]!="Windows") && requireNamespace("parallel")
-    n.cores <- if(parallel) parallel::detectCores() else 1;
+    parallel <- ((Sys.info()["sysname"] != "Windows") &&
+        requireNamespace("parallel"))
+    n.cores <- if (parallel) parallel::detectCores() else 1
 
     ## extract factor names
-    facnames    <- sapply(factors,
-                          function(x) rev(unlist(strsplit(x,"="),use.names=FALSE))[1])
-    facnewnames <- sapply(factors,
-                          function(x) unlist(strsplit(x,"="),use.names=FALSE)[1])
+    facnames <- sapply(
+        factors,
+        function(x) rev(unlist(strsplit(x, "="), use.names = FALSE))[1]
+    )
+    facnewnames <- sapply(
+        factors,
+        function(x) unlist(strsplit(x, "="), use.names = FALSE)[1]
+    )
 
-    if(! all ( facnames %in% names(d) ))
-       stop("Grouping factor(s) ",
-            paste("'",facnames[ ! facnames %in% names(d) ],"'",
-                  sep='',collapse=', '),
-            " is/are not part of the data frame")
+    if (!all(facnames %in% names(d))) {
+        stop(
+            "Grouping factor(s) ",
+            paste("'", facnames[!facnames %in% names(d)], "'",
+                sep = "", collapse = ", "
+            ),
+            " is/are not part of the data frame"
+        )
+    }
 
-    ## extract column indices of factors that will be used... will need them later
-    faccols <- match( facnames, names(d) )
+    ## extract column indices of factors that will be used... will
+    ## need them later
+    faccols <- match(facnames, names(d))
 
     ## remember which columns are numeric
-    facnum <- sapply(faccols,
-                     function(i) is.numeric(d[,i]))
+    facnum <- sapply(
+        faccols,
+        function(i) is.numeric(d[, i])
+    )
 
     ## make sure categories are factors, since numeric level codes used later
-    for(i in faccols)
-        if(! is.factor(d[,i]))
-            d[,i] <- as.factor(d[,i])
+    for (i in faccols) {
+        if (!is.factor(d[, i])) {
+            d[, i] <- as.factor(d[, i])
+        }
+    }
 
     ## until 9999 levels, the factor order is preserved in the results
     ## above that, the results are still correct but not ordered...
-    levs <- apply(as.data.frame(lapply(d[,faccols,drop=FALSE],
-                                       function(x) as.integer(x))),
-                  1,
-                  function(x) paste(sprintf("%04d",x),collapse=schar))
+    levs <- apply(
+        as.data.frame(lapply(
+            d[, faccols, drop = FALSE],
+            function(x) as.integer(x)
+        )),
+        1,
+        function(x) paste(sprintf("%04d", x), collapse = schar)
+    )
 
     ## create factor skeleton
-    if(expand) {
-        faclist <- lapply(faccols,
-                          function(x) {
-                              sort(unique(as.integer(d[,x]))) })
-        attr(faclist,"names") <- facnewnames
+    if (expand) {
+        faclist <- lapply(
+            faccols,
+            function(x) {
+                sort(unique(as.integer(d[, x])))
+            }
+        )
+        attr(faclist, "names") <- facnewnames
         dnew <- expand.grid(faclist)
     } else {
         lev <- sort(unique(as.character(levs)))
         ## single factor case needs to be treated separately because
         ## strsplit does not return a list if no separator is detected
-        if(length(faccols)==1)
+        if (length(faccols) == 1) {
             dnew <- data.frame(lev)
-        else
+        } else {
             dnew <- data.frame(
-                      t(  sapply(lev,
-                                 function(x) {
-                                     unlist(strsplit(x,schar), use.names=FALSE) })
-                    ))
+                t(sapply(
+                    lev,
+                    function(x) {
+                        unlist(strsplit(x, schar), use.names = FALSE)
+                    }
+                ))
+            )
+        }
         colnames(dnew) <- facnewnames
     }
-    rownames(dnew)<-apply(dnew,
-                          1,
-                          function(x) {
-                              paste(sprintf("%04d",as.integer(x)),
-                                    collapse=schar) })
+    rownames(dnew) <- apply(
+        dnew,
+        1,
+        function(x) {
+            paste(sprintf("%04d", as.integer(x)),
+                collapse = schar
+            )
+        }
+    )
 
     ## replace codes by factor levels
-    for(i in seq_along(faccols))
-        dnew[,i] <- factor(
-            levels( d[[ faccols[i] ]])[ as.integer( as.character(dnew[,i]) ) ] )
+    for (i in seq_along(faccols))
+        dnew[, i] <- factor(
+            levels(d[[faccols[i]]])[as.integer(as.character(dnew[, i]))])
 
     ## restore numeric values if requested
-    if(keep.numerics)
-        for(i in seq_along(facnum))
-            if(facnum[i])
-                dnew[,i] <- safen(dnew[,i])
+    if (keep.numerics)
+        for (i in seq_along(facnum))
+            if (facnum[i])
+                dnew[, i] <- safen(dnew[, i])
 
     eqpos <- sapply(newcols,
-                    function(x) attr(regexpr("[^=]+=",x),"match.length") )
+                    function(x) attr(regexpr("[^=]+=", x), "match.length"))
 
-    newnames <- substr( newcols, 1, eqpos-1 );
-    funcpart <- substr( newcols, eqpos + 1, nchar(newcols) );
+    newnames <- substr(newcols, 1, eqpos - 1);
+    funcpart <- substr(newcols, eqpos + 1, nchar(newcols));
 
     ## check that all variables are in data frame...
     ## leads to less cryptic error messages
     ynames <- unlist(
         lapply(funcpart,
                function(f) {
-                   m <- gregexpr("(?<=\\()[^\\(\\), ]+(?=\\))",f,perl=TRUE)[[1]]
-                   sapply(which(m>0),
+                   m <- gregexpr("(?<=\\()[^\\(\\), ]+(?=\\))", f, perl = TRUE)[[1]]
+                   sapply(which(m > 0),
                           function(n) {
-                              substr(f,m[n],m[n]-1+attr(m,"match.length")[n])
+                              substr(f, m[n], m[n] - 1 + attr(m, "match.length")[n])
                           })
                }))
 
-    if(! all ( ynames %in% names(d) ))
+    if (! all(ynames %in% names(d)))
        stop("Variable ",
-            paste("'",ynames[ ! ynames %in% names(d) ],"'",
-                  sep='',collapse=', '),
+            paste("'", ynames[! ynames %in% names(d)], "'",
+                  sep = "", collapse = ", "),
             " is/are not part of the data frame")
 
     ## modify expressions to contain grouping
     funcpart <- gsub("\\(([^,\\(\\) ]+)\\)",
                      "(d$\\1[levs==x])",
                      funcpart,
-                     perl=TRUE);
+                     perl = TRUE);
 
     ## calculate aggregated column data
     ## uses parallelization if package 'parallel' is installed
-    for(i in 1:length(newcols)) {
-        cmd <- if(parallel)
-                   paste("dnew$",newnames[i]," <- ",
+    for (i in seq_len(length(newcols))) {
+        cmd <- if (parallel)
+                   paste("dnew$", newnames[i], " <- ",
                          "parallel::mcmapply(function(x) { ",
                          funcpart[i],
                          " },rownames(dnew),USE.NAMES=FALSE,mc.cores=",
                          n.cores,
                          ")",
-                         sep="")
+                         sep = "")
                else
-                   paste("dnew$",newnames[i]," <- ",
+                   paste("dnew$", newnames[i], " <- ",
                          "sapply(rownames(dnew),function(x) { ",
                          funcpart[i],
                          " } )",
-                         sep="")
-        eval(parse(text=cmd))
+                         sep = "")
+        eval(parse(text = cmd))
     }
 
     ## fix rownames

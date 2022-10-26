@@ -39,7 +39,7 @@ modalpha <- function(x, k=NULL, alpha=NULL) {
         sapply(x, function(x) {
             if (substr(x,1,1) != "#") {
                 sprintf("#%s%02x",
-                        paste(sprintf("%02x", col2rgb(x), sep=""), collapse=""),
+                        paste(sprintf("%02x", col2rgb(x)), collapse=""),
                         if (is.null(k)) alpha else min(255, max(0, round(255*k))))
             } else {
                 sprintf(
