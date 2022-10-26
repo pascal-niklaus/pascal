@@ -19,7 +19,7 @@ all objects and functions:
 
 > ls.str("package:pascal")
 
-addColumns : function (trg, src, key, cols, after = TRUE)  
+addColumns : function (trg, src, key, cols, after = NULL, before = NULL)  
 addpoly : function (mem, x, y1, y2)  
 aggr : function (d, factors = NULL, newcols = NULL, expand = FALSE, keep.numerics = FALSE, 
     schar = ":")  
@@ -48,6 +48,7 @@ corner.label : function (label = NULL, pos = "topleft", units = "char", dist = 1
 cot : function (z)  
 cotpi : function (z)  
 current_time : function (fmt = "%d-%b-%Y %H:%M:%S")  
+deleteColumns : function (d, cols, rx = FALSE)  
 demo2D : function ()  
 disableSink : function ()  
 E12 :  num [1:12] 1 1.2 1.5 1.8 2.2 2.7 3.3 3.9 4.7 5.6 ...
@@ -95,6 +96,7 @@ memused : function (print = TRUE, total = TRUE, objs = TRUE, top = 10, base2 = F
 min_NAsafe : function (x)  
 modalpha : function (x, k = NULL, alpha = NULL)  
 months.len :  int [1:12] 31 28 31 30 31 30 31 31 30 31 ...
+moveColumns : function (d, cols, after = NULL, before = NULL)  
 NAtozero : function (x)  
 newpoly : function (col = NULL, angle = NULL, density = NULL, lwd = NULL, lty = NULL)  
 place : Formal class 'standardGeneric' [package "methods"] with 8 slots
@@ -130,6 +132,7 @@ reflecty2D : function ()
 reload.pascal : function ()  
 resDivider : function (ratio, rmin = 1000, rmax = 1e+06, series = pascal::E24, exponents = 0:6, 
     n = 2, tol = 0.05, ntop = 10)  
+restorefactors : function (d, cols = seq_along(names(d)))  
 right.axis : function (...)  
 rotate2D : function (theta)  
 rxmatches : function (x, m)  
@@ -150,9 +153,9 @@ simple.heading : function (txt = NULL, width = 80, char = "#", side.char = char,
     4), spc = "  ", pre = 0, post = 1, center = TRUE)  
 simple.trailer : function (txt = NULL, width = 80, char = "#", side.char = char, corner.char = rep(char, 
     4), spc = "  ", pre = 0, post = 1, center = TRUE)  
-Sink : function (...)  
+Sink : function (..., width = NA)  
 snapToGrid : function (d, theta = 0, sz = 1, which = "points")  
-sorted.code : function (..., split = NULL, collapse = NULL)  
+sorted.code : function (..., split = NULL, collapse = NULL, unique = FALSE)  
 splitScreen : function (nx = 2, ny = 1, gapx = 0, gapy = 0, topy = 0, bottomy = 0.2, 
     leftx = 0.2, rightx = 0, byrow = TRUE, debug = FALSE, addLeft = FALSE, 
     addRight = FALSE, addBottom = FALSE, addTop = FALSE)  
@@ -184,7 +187,7 @@ xtreme : function (x, f = 3.5)
 xy.errbar : function (x, y, yplus = NULL, yminus = NULL, xplus = NULL, xminus = NULL, 
     yerr = NULL, xerr = NULL, cap = 0.015, lty = 1, lwd = 1, add = FALSE, 
     ...)  
-Zr : function (F, dendf, df = 1)  
+Zr : function (F, dendf, df = 1) 
 
 ### Deprecated
 
