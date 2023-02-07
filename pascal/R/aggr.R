@@ -1,16 +1,14 @@
 #' Aggregates a Data Frame
 #'
 #' \code{aggr} was written in 2005 as a more generic alternative to
-#' \code{\link{aggregate}}, which used excessive memory when a larger
-#' number of factors were given, and which is restricted to a single
-#' summary function. Meanwhile, other libraries exist that provide
-#' functions to achieve similar goals, including \code{plyr}.
+#' \code{\link{aggregate}}.Meanwhile, other libraries exist that
+#' provide functions to achieve similar goals, including \code{plyr}.
 #'
 #' The \code{factors} defining the grouping are given as character
 #' string and can be given new names in the aggregated data set. For
 #' example, \code{factors=c("f1=factor1","f2=factor2")} will rename
 #' the factors \code{factor1} and \code{factor2} to \code{f1} and
-#' \code{f2}.  If no new name is given, the original is kept.
+#' \code{f2}. If no new name is given, the original is kept.
 #'
 #' The summary column defined in \code{newcols} is passed as character
 #' vector with the form
@@ -35,19 +33,24 @@
 #' for simple summary functions.
 #'
 #' @param d Source data frame containing the data set to aggregate
-#' @param factors Character vector containing the names of the factors that
-#'                define the categories in the aggregated data set
-#' @param newcols Character vector containing the names of the aggregated
-#'                variables and the function with which they are calculated
-#' @param expand Logical flag: if TRUE, the resulting data frame will contain
-#'               all combinations of the supplied factors, even if these are
-#'               not present in the original data frame
 #'
-#' @param keep.numerics Logical flag: if TRUE, numeric columns
-#'     defining the grouping will be kept numeric in the aggregated
-#'     data, i.e. not converted to a factor
-#' @param schar separator used in group processing; must not occur in
-#'     factor levels. Defaults to \code{;}.
+#' @param factors Character vector containing the names of the columns
+#'     that define the categories in the aggregated data set
+#'
+#' @param newcols Character vector containing the names of the
+#'     aggregated variables and the function with which they are
+#'     calculated
+#'
+#' @param expand Logical flag: if TRUE, the resulting data frame will
+#'     contain all combinations of the supplied factors, even if these
+#'     are not present in the original data frame
+#'
+#' @param parallel Logical indicating whether calculation of
+#'     aggregated values should be parallelized, using \code{mclapply}
+#'     (library \code{parallel}) is available. Note that
+#'     parallelization incurs an overhead and only results in a
+#'     performance benefit for complex summary functions.
+#'
 #' @return Data frame containing the aggregated data
 #'
 #' @seealso \code{\link{aggregate}}
@@ -96,16 +99,16 @@
 #' @import datasets
 #' @export
 aggr <- function(d,
-                 factors=NULL,
-                 newcols=NULL,
-                 expand=FALSE,
-                 keep.numerics=FALSE,
-                 schar=":") {
+                 factors = NULL,
+                 newcols = NULL,
+                 expand = FALSE,
+                 parallel = FALSE) {
     parallel <- ((Sys.info()["sysname"] != "Windows") &&
-        requireNamespace("parallel"))
+        requireNamespace("parallel")) &&
+        parallel
     n.cores <- if (parallel) parallel::detectCores() else 1
 
-    ## extract factor names
+    ## factors
     facnames <- sapply(
         factors,
         function(x) rev(unlist(strsplit(x, "="), use.names = FALSE))[1]
@@ -125,14 +128,17 @@ aggr <- function(d,
         )
     }
 
-    ## extract column indices of factors that will be used... will
-    ## need them later
     faccols <- match(facnames, names(d))
 
-    ## remember which columns are numeric
-    facnum <- sapply(
-        faccols,
-        function(i) is.numeric(d[, i])
+    factypes <- sapply(
+        seq_along(faccols),
+        function(i) {
+            if (is.factor(d[, faccols[i]])) {
+                "as.factor"
+            } else {
+                paste0("as.", typeof(d[, faccols[i]]))
+            }
+        }
     )
 
     ## make sure categories are factors, since numeric level codes used later
@@ -144,69 +150,40 @@ aggr <- function(d,
 
     ## until 9999 levels, the factor order is preserved in the results
     ## above that, the results are still correct but not ordered...
-    levs <- apply(
-        as.data.frame(lapply(
-            d[, faccols, drop = FALSE],
-            function(x) as.integer(x)
-        )),
-        1,
-        function(x) paste(sprintf("%04d", x), collapse = schar)
+    levs <- .colpaste(
+        as.data.frame(lapply(d[, faccols, drop = FALSE],
+                             function(i) sprintf("%04d", i)))
     )
 
     ## create factor skeleton
     if (expand) {
         faclist <- lapply(
             faccols,
-            function(x) {
-                sort(unique(as.integer(d[, x])))
-            }
+            function(i) sort(unique(sprintf("%04d", as.integer(d[, i]))))
         )
         attr(faclist, "names") <- facnewnames
         dnew <- expand.grid(faclist)
     } else {
         lev <- sort(unique(as.character(levs)))
-        ## single factor case needs to be treated separately because
-        ## strsplit does not return a list if no separator is detected
-        if (length(faccols) == 1) {
-            dnew <- data.frame(lev)
-        } else {
-            dnew <- data.frame(
-                t(sapply(
-                    lev,
-                    function(x) {
-                        unlist(strsplit(x, schar), use.names = FALSE)
-                    }
-                ))
-            )
-        }
+        dnew <- data.frame(t(as.data.frame(strsplit(lev, ":"))))
         colnames(dnew) <- facnewnames
     }
-    rownames(dnew) <- apply(
-        dnew,
-        1,
-        function(x) {
-            paste(sprintf("%04d", as.integer(x)),
-                collapse = schar
-            )
-        }
-    )
+    rownames(dnew) <- .colpaste(dnew, sep = ":")
 
     ## replace codes by factor levels
     for (i in seq_along(faccols))
-        dnew[, i] <- factor(
-            levels(d[[faccols[i]]])[as.integer(as.character(dnew[, i]))])
+        dnew[, i] <-
+            levels(d[[faccols[i]]])[as.integer(as.character(dnew[, i]))]
 
-    ## restore numeric values if requested
-    if (keep.numerics)
-        for (i in seq_along(facnum))
-            if (facnum[i])
-                dnew[, i] <- safen(dnew[, i])
+    ## restore column type
+    for (i in seq_along(factypes))
+        dnew[, i] <- do.call(factypes[i], list(dnew[, i]))
 
     eqpos <- sapply(newcols,
                     function(x) attr(regexpr("[^=]+=", x), "match.length"))
 
-    newnames <- substr(newcols, 1, eqpos - 1);
-    funcpart <- substr(newcols, eqpos + 1, nchar(newcols));
+    newnames <- substr(newcols, 1, eqpos - 1)
+    funcpart <- substr(newcols, eqpos + 1, nchar(newcols))
 
     ## check that all variables are in data frame...
     ## leads to less cryptic error messages
@@ -228,31 +205,28 @@ aggr <- function(d,
 
     ## modify expressions to contain grouping
     funcpart <- gsub("\\(([^,\\(\\) ]+)\\)",
-                     "(d$\\1[levs==x])",
+                     "(d$\\1[idx])",
                      funcpart,
-                     perl = TRUE);
+                     perl = TRUE)
 
     ## calculate aggregated column data
     ## uses parallelization if package 'parallel' is installed
-    for (i in seq_len(length(newcols))) {
+    for (i in seq_along(newcols)) {
         cmd <- if (parallel)
-                   paste("dnew$", newnames[i], " <- ",
-                         "parallel::mcmapply(function(x) { ",
-                         funcpart[i],
-                         " },rownames(dnew),USE.NAMES=FALSE,mc.cores=",
-                         n.cores,
-                         ")",
-                         sep = "")
+                   paste0("dnew$", newnames[i], " <- ",
+                          "parallel::mcmapply(function(x) { idx<-levs==x;",
+                          funcpart[i],
+                          " },rownames(dnew),USE.NAMES=FALSE,mc.cores=",
+                          n.cores,
+                          ")")
                else
-                   paste("dnew$", newnames[i], " <- ",
-                         "sapply(rownames(dnew),function(x) { ",
-                         funcpart[i],
-                         " } )",
-                         sep = "")
-        eval(parse(text = cmd))
+                   paste0("dnew$", newnames[i], "<-",
+                          "sapply(rownames(dnew),function(x) { idx<-levs==x;",
+                          funcpart[i],
+                          " } )")
+        eval(str2lang(cmd))
     }
 
-    ## fix rownames
     rownames(dnew) <- NULL
     dnew
 }

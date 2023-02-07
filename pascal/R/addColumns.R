@@ -18,7 +18,6 @@
 #'
 #' @return target data frame amended with columns.
 #' @examples
-#'
 #' data(CO2, package="datasets")
 #'
 #' d <- aggr(CO2,"Plant", "mean.uptake=mean(uptake)")

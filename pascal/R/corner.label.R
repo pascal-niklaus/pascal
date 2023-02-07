@@ -93,7 +93,8 @@ corner.label <- function(label=NULL,pos="topleft",units="char",dist=1,fun=NULL,f
 #' user-provided function can be called before printing the
 #' label. This could, for example, be used to first draw a background.
 #'
-#' @param x,y Coordinates of the labels
+#' @param x,y Coordinates of the labels, or a string containing a
+#'     combination of dimensions and units (e.g. "2native+2.5lines")
 #'
 #' @param label Text to be plotted
 #'
@@ -160,25 +161,111 @@ label <- function(x, y, label=NULL, units=c("native", "lines"),
     requireNamespace("gridBase")
     requireNamespace("grid")
 
-    frame.opts <- c("inner","figure","plot")
-    frame <- which(frame==frame.opts)
-    if(length(frame)==0)
+    frame.opts <- c("inner", "figure", "plot")
+    frame <- which(frame == frame.opts)
+    if (length(frame) == 0)
         stop("frame must be one of ",
-             paste(paste("'",frame.opts,"'",sep=""),
-                   collapse=", "))
+             paste(paste("'", frame.opts, "'", sep = ""),
+                   collapse = ", "))
 
     vps <- gridBase::baseViewports()
 
-    for(i in 1:frame)
+    for (i in 1:frame)
         grid::pushViewport(vps[[i]])
 
-    xx <- grid::unit(x, units[1])
-    yy <- grid::unit(y, units[2])
+    if (is.numeric(x))
+        xx <- grid::unit(x, units[1])
+    else
+        xx <- .processunits(x)
 
-    if(!is.null(fun))
+    if (is.numeric(y))
+        yy <- grid::unit(y, units[2])
+    else
+        yy <- .processunits(y)
+
+    if (!is.null(fun))
         fun(xx, yy, label, ...)
-    if(!is.null(label))
-        grid::grid.text(label, x=xx, y=yy, rot=rot, just=just,
-                        gp=grid::gpar(...))
-    grid::popViewport(n=i)
+    if (!is.null(label))
+        grid::grid.text(label, x = xx, y = yy, rot = rot, just = just,
+                        gp = grid::gpar(...))
+    grid::popViewport(n = i)
+}
+
+#' Add a line to a plot using grid coordinates
+#'
+#' \code{gline} draws a line with coordinates that can be specified in
+#' different units.
+#'
+#' This function facilitates the decoration of plots. Using
+#' \code{grid}-graphics, lines are drawn using coordinates that can be
+#' specified in different units.
+#'
+#' @param x,y Coordinates of the labels, or a string containing a
+#'     combination of dimensions and units
+#'     (e.g. "2native+2.5lines"). Coordinate vectors are recycled to
+#'     equal length if necessary, allowing to pass just a single x or y value
+#'     for vertical and horizontal lines, respectively.
+#'
+#' @param frame Either of 'inner', 'figure', or 'plot'. Indicates the
+#'     area that is to be labelled. 'inner' is the entire page area
+#'     except the margins. 'figure' is the figure area. 'plot' is the
+#'     area used for plotting (inside the axis). Defaults to 'plot'.
+#'
+#' @param ... Extra parameters passed when calling
+#'     \code{grid.line}. Check \code{?gpar} for options.
+#'
+#' @examples
+#' \dontrun{
+#' plot(NULL, xlim=c(0,2), ylim=c(1,3))
+#' gline(c("0.5native","1.5native"), "-1lines", col="blue",lwd=2)
+#' }
+#' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
+#' @export
+gline <- function(x, y, frame="plot", ...) {
+    requireNamespace("gridBase")
+    requireNamespace("grid")
+
+    n <- max(lengths(list(x, y)))
+    x <- rep(x, length.out = n)
+    y <- rep(y, length.out = n)
+
+    frame.opts <- c("inner", "figure", "plot")
+    frame <- which(frame == frame.opts)
+    if (length(frame) == 0)
+        stop("frame must be one of ",
+             paste(paste("'", frame.opts, "'", sep = ""),
+                   collapse = ", "))
+
+    vps <- gridBase::baseViewports()
+
+    for (i in 1:frame)
+        grid::pushViewport(vps[[i]])
+
+    grid::grid.move.to(.processunits(x[1]),
+                        .processunits(y[1]))
+    for (i in 2:length(x)) {
+        grid::grid.line.to(.processunits(x[i]),
+                            .processunits(y[i]),
+                            gp = grid::gpar(...))
+    }
+    grid::popViewport(n = i)
+}
+
+
+.processunits <- function(x) {
+    if (is.character(x)) {
+        x <- gsub("([0-9.]+)([a-z]+)",
+                  "grid::unit(\\1,\"\\2\")",
+                  x,
+                  perl = TRUE)
+        v <- eval(parse(text = x))
+    } else if (is.list(x)) {
+        for (i in seq_along(x)) {
+            vv <- grid::unit(x[[1]], units = names(x)[1])
+            v <- if (i == 1) v else v + vv
+        }
+    } else {
+        stop("illegal format of dimension")
+    }
+    v
 }

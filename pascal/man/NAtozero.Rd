@@ -13,7 +13,7 @@ NAtozero(x)
 vector with non-finite (NaN, Inf) and missing data (NA) replaced by zero
 }
 \description{
-Convenience function that replaces NA and NaN in vectors, lists, and matrices by zero
+Convenience function that replaces NA and NaN in vectors, lists, data frames, and matrices by zero
 }
 \details{
 Note that +Inf/-Inf values are preserved.

@@ -30,32 +30,42 @@
 #' @importFrom grDevices col2rgb
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-modalpha <- function(x, k=NULL, alpha=NULL) {
-    if (is.null(k) + is.null(alpha) != 1)
+modalpha <- function(x, k = NULL, alpha = NULL) {
+    if (is.null(k) + is.null(alpha) != 1) {
         stop("exactly one of 'k' and 'alpha' needs to be specified.")
-    if (!is.null(alpha))
-        alpha  <- min(255, max(0, round(alpha)))
+    }
+    if (!is.null(alpha)) {
+        alpha <- min(255, max(0, round(alpha)))
+    }
     unname(
         sapply(x, function(x) {
-            if (substr(x,1,1) != "#") {
-                sprintf("#%s%02x",
-                        paste(sprintf("%02x", col2rgb(x)), collapse=""),
-                        if (is.null(k)) alpha else min(255, max(0, round(255*k))))
+            if (substr(x, 1, 1) != "#") {
+                sprintf(
+                    "#%s%02x",
+                    paste(sprintf("%02x", col2rgb(x)), collapse = ""),
+                    if (is.null(k)) alpha else min(255, max(0, round(255 * k)))
+                )
             } else {
                 sprintf(
                     "%s%02x",
-                    substr(x,1,7),
-                    min(255,
-                        max(0,
+                    substr(x, 1, 7),
+                    min(
+                        255,
+                        max(
+                            0,
                             round(
                                 if (is.null(k)) {
                                     alpha
-                                } else if (nchar(x)==7) {
-                                    255*k
+                                } else if (nchar(x) == 7) {
+                                    255 * k
                                 } else {
-                                    strtoi(paste("0x",substr(x,8,9),sep=""))*k
+                                    strtoi(paste("0x", substr(x, 8, 9), sep = "")) * k
                                 }
-                            ))))
+                            )
+                        )
+                    )
+                )
             }
-        }))
+        })
+    )
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/stck.R
 \name{stck}
 \alias{stck}
-\title{Stack a data frame}
+\title{Stack columns of a data frame}
 \usage{
 stck(
   d,
@@ -19,57 +19,65 @@ stck(
 \item{factors}{Character vector containing the names of the factors that
 define the categories that are preserved in the new data set}
 
-\item{covars}{Character vector containing the names of covariables that
-are preserved in the new data set}
+\item{covars}{Character vector containing the names of covariables
+that are preserved in the new data set}
 
-\item{to.stack}{Character vector containing the names of the columns that 
-are to be stacked in the new data set}
+\item{to.stack}{Character vector containing the names of the
+columns that are to be stacked in the new data set}
 
-\item{cat.names}{Character vector containing the names of categories that
-correspond to the groups stacked in the new data set}
+\item{cat.names}{Character vector containing the names of
+categories that correspond to the groups stacked in the new
+data set}
 
-\item{expand}{Logical flag: if TRUE, the resulting data frame will contain
-all combinations of the supplied factors, even if these are
-not present in the original data frame}
+\item{expand}{Logical flag: if TRUE, the resulting data frame will
+contain all combinations of the supplied factors, even if these
+are not present in the original data frame}
 }
 \description{
-Given a data frame, separate variables (columns) are combined (stacked)
-into a single column with a new name.
+Given a data frame, separate variables (columns) are combined
+(stacked) into a single column with a new name.
 }
 \details{
-\code{stck} and the corresponding \code{splt} were written as a more 
-generic alternative to \code{\link{merge}}.
+\code{stck} and the corresponding \code{splt} were written as a
+more generic alternative to \code{\link{merge}} and
+\code{\link{reshape}}.
 
-The \code{factors} and \code{covars} 
-that are to be preserved in the stacked data frame
-are passed as character string and can be given new names
-in the stacked data set. For example, \code{factors=c("f1=factor1","f2=factor2")}
-will rename the factors \code{factor1} and \code{factor2} to \code{f1} and \code{f2}.
-If no new name is given, the original is kept.
-The difference between \code{factors} and \code{covars} is that the \code{covars}
-are not part of the new combinations generated when \code{expand=TRUE} is specified.
+The \code{factors} and \code{covars} that are to be preserved in
+the stacked data frame are passed as character string and can be
+given new names in the stacked data set. For example,
+\code{factors=c("f1=factor1","f2=factor2")} will rename the factors
+\code{factor1} and \code{factor2} to \code{f1} and \code{f2}.  If
+no new name is given, the original is kept.  The difference between
+\code{factors} and \code{covars} is that the \code{covars} are not
+part of the new combinations generated when \code{expand=TRUE} is
+specified.
 
-The columns that are to be stacked are passed in \code{to.stack} in the
-form \code{to.stack=c("newcol1=col1,col2,col3","newcol2=col4,col5,col6")}.
-Several new columns can be generated, but for obvious reasons these 
-need to be composed of the same number of columns in the original data frame.
+The columns that are to be stacked are passed in \code{to.stack} in
+the form
+\code{to.stack=c("newcol1=col1,col2,col3","newcol2=col4,col5,col6")}.
+Several new columns can be generated, but for obvious reasons these
+need to be composed of the same number of columns in the original
+data frame.
  
-\code{cat.names} will assign designators to the groups of data that are stacked. 
-Let's assume \code{newcol1} is the result of stacking the original 
-columns (groups) \code{col1}, \code{col2} and \code{col3}. Then, these groups can be iden identified
-by a new grouping variable defined by \code{cat.names="group=a,b,c"}.
-All rows with data from \code{col1} will then have \code{group}==\code{"a"}, rows with data from
-\code{col2} will have \code{group}==\code{"b"} etc. 
-If no \code{cat.names} are passed, the name of the columns is used instead.
+\code{cat.names} will assign designators to the groups of data that
+are stacked.  Let's assume \code{newcol1} is the result of stacking
+the original columns (groups) \code{col1}, \code{col2} and
+\code{col3}. Then, these groups can be iden identified by a new
+grouping variable defined by \code{cat.names="group=a,b,c"}.  All
+rows with data from \code{col1} will then have
+\code{group}==\code{"a"}, rows with data from \code{col2} will have
+\code{group}==\code{"b"} etc.  If no \code{cat.names} are passed,
+the name of the columns is used instead.
 }
 \examples{
 data(CO2, package="datasets")
 d<-CO2
 d$Replicate<-substr(as.character(d$Plant),3,3)
-d.split <- splt(d,factors=c("Replicate","Type","conc"),by="Treatment",to.split=c("uptake"))
-d.split$conc <- safen(d.split$conc)
-d.split <- d.split[order(d.split$Replicate,d.split$Type,d.split$conc),]
-d[d$Type=="Mississippi" & d$Replicate==1,]
+d.split <- splt(d,factors = c("Replicate", "Type", "conc"),
+                by="Treatment",
+                to.split = "uptake")
+d.split <- d.split[with(d.split, order(Replicate, Type, conc)), ]
+d[d$Type == "Mississippi" & d$Replicate == 1, ]
 ##    Plant        Type  Treatment conc uptake Replicate
 ## 43   Mn1 Mississippi nonchilled   95   10.6         1
 ## 44   Mn1 Mississippi nonchilled  175   19.2         1
@@ -85,7 +93,7 @@ d[d$Type=="Mississippi" & d$Replicate==1,]
 ## 68   Mc1 Mississippi    chilled  500   19.5         1
 ## 69   Mc1 Mississippi    chilled  675   22.2         1
 ## 70   Mc1 Mississippi    chilled 1000   21.9         1
-d.split[d.split$Type=="Mississippi" & d.split$Replicate==1,]
+d.split[d.split$Type == "Mississippi" & d.split$Replicate == 1, ]
 ##   Replicate        Type conc uptake.chilled uptake.nonchilled
 ## 7         1 Mississippi   95           10.5              10.6
 ## 2         1 Mississippi  175           14.9              19.2
@@ -95,12 +103,12 @@ d.split[d.split$Type=="Mississippi" & d.split$Replicate==1,]
 ## 6         1 Mississippi  675           22.2              32.4
 ## 1         1 Mississippi 1000           21.9              35.5
 d.stacked <- stck(d.split,
-                  factors=c("Replicate","Type","conc"),
-                  to.stack=c("uptake=uptake.chilled,uptake.nonchilled"),
-                  cat.names=c("Treatment=chilled,nonchilled"))
-d.stacked$conc <- safen(d.stacked$conc)
-d.stacked <- d.stacked[order(d.stacked$Replicate,d.stacked$Type,d.stacked$Treatment,d.stacked$conc),]
-d.stacked[d.stacked$Type=="Mississippi" & d.stacked$Replicate==1,]
+                  factors = c("Replicate", "Type", "conc"),
+                  to.stack = c("uptake=uptake.chilled,uptake.nonchilled"),
+                  cat.names = c("Treatment=chilled,nonchilled"))
+d.stacked <- d.stacked[with(d.stacked,
+                            order(Replicate, Type, Treatment, conc)), ]
+d.stacked[d.stacked$Type == "Mississippi" & d.stacked$Replicate == 1,]
 ##    Replicate        Type conc  Treatment uptake
 ## 1          1 Mississippi 1000    chilled   21.9
 ## 2          1 Mississippi  175    chilled   14.9
@@ -118,7 +126,7 @@ d.stacked[d.stacked$Type=="Mississippi" & d.stacked$Replicate==1,]
 ## 49         1 Mississippi   95 nonchilled   10.6
 }
 \seealso{
-\code{\link{merge}}, \code{\link{splt}}, \code{\link{expand.grid}}
+\code{\link{reshape}}, \code{\link{merge}}, \code{\link{splt}}, \code{\link{expand.grid}}
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}

@@ -4,51 +4,42 @@
 \alias{aggr}
 \title{Aggregates a Data Frame}
 \usage{
-aggr(
-  d,
-  factors = NULL,
-  newcols = NULL,
-  expand = FALSE,
-  keep.numerics = FALSE,
-  schar = ":"
-)
+aggr(d, factors = NULL, newcols = NULL, expand = FALSE, parallel = FALSE)
 }
 \arguments{
 \item{d}{Source data frame containing the data set to aggregate}
 
-\item{factors}{Character vector containing the names of the factors that
-define the categories in the aggregated data set}
+\item{factors}{Character vector containing the names of the columns
+that define the categories in the aggregated data set}
 
-\item{newcols}{Character vector containing the names of the aggregated
-variables and the function with which they are calculated}
+\item{newcols}{Character vector containing the names of the
+aggregated variables and the function with which they are
+calculated}
 
-\item{expand}{Logical flag: if TRUE, the resulting data frame will contain
-all combinations of the supplied factors, even if these are
-not present in the original data frame}
+\item{expand}{Logical flag: if TRUE, the resulting data frame will
+contain all combinations of the supplied factors, even if these
+are not present in the original data frame}
 
-\item{keep.numerics}{Logical flag: if TRUE, numeric columns
-defining the grouping will be kept numeric in the aggregated
-data, i.e. not converted to a factor}
-
-\item{schar}{separator used in group processing; must not occur in
-factor levels. Defaults to \code{;}.}
+\item{parallel}{Logical indicating whether calculation of
+aggregated values should be parallelized, using \code{mclapply}
+(library \code{parallel}) is available. Note that
+parallelization incurs an overhead and only results in a
+performance benefit for complex summary functions.}
 }
 \value{
 Data frame containing the aggregated data
 }
 \description{
 \code{aggr} was written in 2005 as a more generic alternative to
-\code{\link{aggregate}}, which used excessive memory when a larger
-number of factors were given, and which is restricted to a single
-summary function. Meanwhile, other libraries exist that provide
-functions to achieve similar goals, including \code{plyr}.
+\code{\link{aggregate}}.Meanwhile, other libraries exist that
+provide functions to achieve similar goals, including \code{plyr}.
 }
 \details{
 The \code{factors} defining the grouping are given as character
 string and can be given new names in the aggregated data set. For
 example, \code{factors=c("f1=factor1","f2=factor2")} will rename
 the factors \code{factor1} and \code{factor2} to \code{f1} and
-\code{f2}.  If no new name is given, the original is kept.
+\code{f2}. If no new name is given, the original is kept.
 
 The summary column defined in \code{newcols} is passed as character
 vector with the form

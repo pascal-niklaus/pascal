@@ -21,8 +21,7 @@ all objects and functions:
 
 addColumns : function (trg, src, key, cols, after = NULL, before = NULL)  
 addpoly : function (mem, x, y1, y2)  
-aggr : function (d, factors = NULL, newcols = NULL, expand = FALSE, keep.numerics = FALSE, 
-    schar = ":")  
+aggr : function (d, factors = NULL, newcols = NULL, expand = FALSE, parallel = FALSE)  
 angles : Formal class 'standardGeneric' [package "methods"] with 8 slots
 aov.ftest : function (aovobj, test.formula, table = FALSE)  
 aov.ko : function (formula, data = NULL, projections = FALSE, qr = TRUE, contrasts = NULL, 
@@ -67,8 +66,9 @@ getObjects : function (cls = "function")
 getResolution : function ()  
 gfx2D : function (tx = c(0, 0), ty = tx[2], sx = c(1, 1), sy = sx[2], rot = 0)  
 glimpse : function (..., len = 5, pre = 1, post = 0, between = 1)  
+gline : function (x, y, frame = "plot", ...)  
 greatestCommonDenominator : function (a, b)  
-groupSpace : function (d, cols)  
+groupSpace : function (d, cols, equal = FALSE)  
 grow : Formal class 'standardGeneric' [package "methods"] with 8 slots
 guess_decompressor : function (file)  
 heading : function (txt = NULL, width = 80, right = FALSE, bottom = FALSE, char = "#", 
@@ -187,7 +187,7 @@ xtreme : function (x, f = 3.5)
 xy.errbar : function (x, y, yplus = NULL, yminus = NULL, xplus = NULL, xminus = NULL, 
     yerr = NULL, xerr = NULL, cap = 0.015, lty = 1, lwd = 1, add = FALSE, 
     ...)  
-Zr : function (F, dendf, df = 1) 
+Zr : function (F, dendf, df = 1)  
 
 ### Deprecated
 

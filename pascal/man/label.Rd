@@ -17,7 +17,8 @@ label(
 )
 }
 \arguments{
-\item{x, y}{Coordinates of the labels}
+\item{x, y}{Coordinates of the labels, or a string containing a
+combination of dimensions and units (e.g. "2native+2.5lines")}
 
 \item{label}{Text to be plotted}
 

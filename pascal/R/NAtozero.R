@@ -1,6 +1,6 @@
 #' Replace NA and NaN with zero
 #'
-#' Convenience function that replaces NA and NaN in vectors, lists, and matrices by zero
+#' Convenience function that replaces NA and NaN in vectors, lists, data frames, and matrices by zero
 #'
 #' Note that +Inf/-Inf values are preserved.
 #' 
@@ -16,12 +16,19 @@
 #' ## [1] 1 2 0 0 5
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-NAtozero <- function(x) 
-{ 
-  if(is.list(x)) {
-    lapply(x,NAtozero);
-  } else if(is.matrix(x)) {
-    apply(x,1:2,NAtozero);
-  } else
-    ifelse(is.na(x) | is.nan(x),0,x); 
+NAtozero <- function(x) {
+    if (is.data.frame(x)) {
+        for (i in seq_along(names(x))) {
+            if (is.numeric(x[, i])) {
+                x[, i] <- ifelse(is.na(x[, i]) | is.nan(x[, i]), 0, x[, i])
+            }
+        }
+        x
+    } else if (is.list(x)) {
+        lapply(x, NAtozero)
+    } else if (is.matrix(x)) {
+        apply(x, 1:2, NAtozero)
+    } else {
+        ifelse(is.na(x) | is.nan(x), 0, x)
+    }
 }

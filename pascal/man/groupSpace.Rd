@@ -4,15 +4,19 @@
 \alias{groupSpace}
 \title{Add spacing between bars in bar plot}
 \usage{
-groupSpace(d, cols)
+groupSpace(d, cols, equal = FALSE)
 }
 \arguments{
 \item{d}{data frame with data}
 
 \item{cols}{the names of the columns that define the groups.}
+
+\item{equal}{logical indicating whether the number of transitions
+(when multiple columns are specified) should be returned
+instead of a simple vector of \code{1} or \code{0}.}
 }
 \value{
-A vector with values of 1 when a transition occurs.
+A vector with values indicating transitions.
 }
 \description{
 \code{groupSpace} is a helper function to add space between the
@@ -25,24 +29,15 @@ returns 1 for a transition, or 0 otherwise. These values can be
 passed to the \code{space} argument of \code{barplot}.
 }
 \examples{
-\dontrun{
+data(CO2)
 
+d <- aggregate(uptake ~ Plant + Type + Treatment, data=CO2, FUN = mean)
 
+barplot(d$uptake, names.arg = d$Plant,
+        space = groupSpace(d, c("Type","Treatment")))
 
-library(grid) # required only because we use grid.cirle in fun
-plot(rnorm(10),rnorm(10))
-corner.label("a",pos="topleft",dist=2,cex=2)
-corner.label(label="b",pos="topright",
-             fun=function(x,y,...)
-                 grid.circle(x,y,unit(.7,"char"),
-                             gp=gpar(fill="black",...)),
-             dist=2,units="cm",
-             col="white",
-             fontface="bold",
-             fontsize=30)
-corner.label("c",pos="bottomright",cex=2)
-corner.label("ddd",pos="bottomleft",dist=c(1.7,1),cex=2)
-}
+barplot(d$uptake, names.arg = d$Plant,
+        space = groupSpace(d, c("Type","Treatment"), equal = TRUE))
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
