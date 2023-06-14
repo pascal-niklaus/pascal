@@ -5,7 +5,7 @@
 #'
 #' Wald tests are reported with the \code{default} denominator degrees
 #' of freedom option of \code{wald.asreml}, adjusted according to
-#' Kenward \& Roger.  The function tests for convergence of the
+#' Kenward & Roger.  The function tests for convergence of the
 #' model. Stratum variances are reported if available in the summary
 #' object \code{asreml} provides.
 #'

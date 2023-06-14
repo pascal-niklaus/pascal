@@ -28,7 +28,5 @@ cloglog(.3)
 invcloglog(cloglog(.3))
 ## [1] 0.3
 
-}
-\author{
-Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
+#' @author Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}
 }

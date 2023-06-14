@@ -247,7 +247,7 @@ setMethod(
         xy <- xy.coords(x, y)
         for (i in seq_along(xy$x)) {
             polygon(
-                appply2D(object@m,polycircle(xy$x[i], xy$y[i],
+                apply2D(object@m,polycircle(xy$x[i], xy$y[i],
                     r = recycle(r, i), rx = recycle(rx, i), ry = recycle(ry, i),
                     pos = recycle(pos, i), phi = recycle(phi, i), n = recycle(n, i)
                 )),

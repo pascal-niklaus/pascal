@@ -34,13 +34,13 @@ Derivatives are calculated analytically.
 }
 \section{Functions}{
 \itemize{
-\item \code{logstc()}: logistic function
+\item \code{logstc}: logistic function
 
-\item \code{logstc.der()}: 1st derivative of logistic function
+\item \code{logstc.der}: 1st derivative of logistic function
 
-\item \code{logstc.der2()}: 2nd derivative of logistic function
-
+\item \code{logstc.der2}: 2nd derivative of logistic function
 }}
+
 \examples{
 x<-seq(40,60,len=100)
 plot(-1,-1,xlim=range(x),ylim=c(-.1,1),xlab="x",ylab="logstc")
