@@ -7,18 +7,25 @@
 test.asreml(d.asr, returnWald = FALSE, silent = FALSE)
 }
 \arguments{
-\item{d.asr}{asreml object, returned from calling \code{asreml} or \code{asreml.nvc}}
+\item{d.asr}{asreml object, returned from calling \code{asreml} or
+\code{asreml.nvc}}
 
-\item{returnWald}{logical. If TRUE, \code{test.asreml} will return the table with the wald tests.}
+\item{returnWald}{logical. If TRUE, \code{test.asreml} will return
+the table with the wald tests.}
 
-\item{silent}{logical. If TRUE, no output will be produced. This is useful when capturing the wald tests for further processing.}
+\item{silent}{logical. If TRUE, no output will be produced. This is
+useful when capturing the wald tests for further processing.}
 }
 \description{
-Given an ASReml object, this function displays the corresponding ANOVA table, error strata, and variance components.
+Given an ASReml object, this function displays the corresponding
+ANOVA table, error strata, and variance components.
 }
 \details{
-Wald tests are reported with the \code{default} denominator degrees of freedom option of \code{wald.asreml}, adjusted according to Kenward \& Roger.
-The function tests for convergence of the model. Stratum variances are reported if available in the summary object \code{asreml} provides.
+Wald tests are reported with the \code{default} denominator degrees
+of freedom option of \code{wald.asreml}, adjusted according to
+Kenward \& Roger.  The function tests for convergence of the
+model. Stratum variances are reported if available in the summary
+object \code{asreml} provides.
 }
 \examples{
 \dontrun{

@@ -64,6 +64,28 @@ setMethod(f = "arrows2D", signature = "gfx2D",
           }
           )
 
+safeSetGeneric(name = "segments2D",
+               def = function(object, ...) standardGeneric("segments2D") )
+
+#' \code{segments2D} draws a set of segments, similar to the regular
+#' \code{\link[graphics]{segments}} function.
+#'
+#' @rdname plot2D
+#' @param x0,y0,x1,y1 coordinates
+#' @param ... extra arguments
+#' @aliases segments2D segments2D-methods segments2D,gfx2D-method segments2D,gfx2D,ANY-method
+#' @export
+setMethod(f = "segments2D", signature = "gfx2D",
+          definition=function(object, x0, y0, x1=x0, y1=y0, ...)
+          {
+              xy0 <- apply2D(object@m, x0, y0)
+              xy1 <- apply2D(object@m, x1, y1)
+              cex.scale <- mean( abs( c(object@sx, object@sy) ) )
+              segments(xy0$x, xy0$y, xy1$x, xy1$y, ...)
+              invisible(object)
+          }
+          )
+
 ######################################################################
 ###
 ### rect2D
@@ -82,29 +104,37 @@ safeSetGeneric(name = "rect2D",
 #' \code{\link[graphics]{rect}} function.
 #'
 #' @export
-setMethod(f = "rect2D", signature = "gfx2D",
-          definition=function(object, xleft, ybottom, xright, ytop, density = NULL, angle = 45,
-                              col = NA, border = NULL, lty = par("lty"), lwd = par("lwd"), ...)
-          {
-              for(i in 1:max(c(length(xleft), length(xright), length(ytop), length(ybottom)))) {
-                  xl <- recycle(xleft, i)
-                  xr <- recycle(xright, i)
-                  yt <- recycle(ytop, i)
-                  yb <- recycle(ybottom, i)
-                  xy <- apply2D(object@m,
-                                list(x = c(xl, xl, xr, xr),
-                                     y = c(yb, yt, yt, yb)))
-                  polygon(xy,
-                          density = recycle(density, i),
-                          angle = recycle(angle, i),
-                          col = recycle(col, i),
-                          border = recycle(border, i),
-                          lty = recycle(lty, i),
-                          lwd = recycle(lwd, i),
-                          ...)
-              }
-              invisible(object)
-          } )
+setMethod(
+    f = "rect2D", signature = "gfx2D",
+    definition = function(object, xleft, ybottom, xright = NULL, ytop = NULL, density = NULL, angle = 45,
+                          col = NA, border = NULL, lty = par("lty"), lwd = par("lwd"), ...) {
+        if (is.null(xright)) xright <- xleft
+        if (is.null(ytop)) ytop <- ybottom
+        for (i in 1:max(c(length(xleft), length(xright), length(ytop), length(ybottom)))) {
+            xl <- recycle(xleft, i)
+            xr <- recycle(xright, i)
+            yt <- recycle(ytop, i)
+            yb <- recycle(ybottom, i)
+            xy <- apply2D(
+                object@m,
+                list(
+                    x = c(xl, xl, xr, xr),
+                    y = c(yb, yt, yt, yb)
+                )
+            )
+            polygon(xy,
+                density = recycle(density, i),
+                angle = recycle(angle, i),
+                col = recycle(col, i),
+                border = recycle(border, i),
+                lty = recycle(lty, i),
+                lwd = recycle(lwd, i),
+                ...
+            )
+        }
+        invisible(object)
+    }
+)
 
 ######################################################################
 ###
@@ -209,25 +239,29 @@ safeSetGeneric(name = "circle2D",
 #' @param phi angle by which the ellipse is rotated, in radians
 #' @param n number of corners of polygon (chose a large number to approximate a circle)
 #' @export
-setMethod(f = "circle2D", signature = "gfx2D",
-          definition=function(object, x, y = NULL, r = NULL, rx = r, ry = rx, pos = "center", phi = 0, n = 16,
-                              density = NULL, angle = 45, col = NA, border = NULL, lty = par("lty"), lwd = par("lwd"), ...)
-          {
-              xy <- apply2D(object@m, xy.coords(x,y))
-              for(i in seq_along(xy$x))
-                  polygon(
-                      polycircle(xy$x[i], xy$y[i],
-                                 r = recycle(r,i), rx = recycle(rx, i), ry = recycle(ry, i),
-                                 pos = recycle(pos, i), phi = recycle(phi, i), n = recycle(n, i)),
-                      density = recycle(density, i),
-                      angle = recycle(angle, i),
-                      col = recycle(col, i),
-                      border = recycle(border, i),
-                      lty = recycle(lty, i),
-                      lwd = recycle(lwd, i),
-                      ...)
-          })
-
+setMethod(
+    f = "circle2D", signature = "gfx2D",
+    definition = function(object, x, y = NULL, r = NULL, rx = r, ry = rx, pos = "center", phi = 0, n = 16,
+                          density = NULL, angle = 45, col = NA, border = NULL, lty = par("lty"), lwd = par("lwd"), ...) {
+        ## xy <- apply2D(object@m, xy.coords(x, y))
+        xy <- xy.coords(x, y)
+        for (i in seq_along(xy$x)) {
+            polygon(
+                appply2D(object@m,polycircle(xy$x[i], xy$y[i],
+                    r = recycle(r, i), rx = recycle(rx, i), ry = recycle(ry, i),
+                    pos = recycle(pos, i), phi = recycle(phi, i), n = recycle(n, i)
+                )),
+                density = recycle(density, i),
+                angle = recycle(angle, i),
+                col = recycle(col, i),
+                border = recycle(border, i),
+                lty = recycle(lty, i),
+                lwd = recycle(lwd, i),
+                ...
+            )
+        }
+    }
+)
 ## xspline2D
 
 

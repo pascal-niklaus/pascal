@@ -80,170 +80,199 @@ NULL
 #' @importFrom parallel mclapply
 #' @rdname resdiv
 #' @export
-resDivider <- function(ratio,rmin=1e3,rmax=1e6,series=pascal::E24,exponents=0:6,n=2,tol=.05,ntop=10)
-{
+resDivider <- function(ratio,
+                       rmin = 1e3, rmax = 1e6,
+                       series = pascal::E24,
+                       exponents = 0:6,
+                       n = 2,
+                       tol = .05,
+                       ntop = 10) {
     parallel <- (Sys.info()["sysname"]!="Windows") && requireNamespace("parallel")
     myapply <- if(parallel) parallel::mclapply else lapply
 
-    tst <- function(tst) {
-        abs(tst/ratio-1) <= tol
-    }
+    tst <- function(tst) abs(tst/ratio-1) <= tol
 
     ## create list of available resistors
-    fullSeries <- expand.grid(series, 10^(exponents) )
-    fullSeries <- fullSeries[,1] * fullSeries[,2]
+    fullSeries <- expand.grid(series, 10^(exponents))
+    fullSeries <- fullSeries[, 1] * fullSeries[, 2]
 
     ## try 2-resistor combinations
     res <-
-        myapply(fullSeries [ ( fullSeries >= rmin) & (fullSeries <= rmax) ],
-                function(A) {
-                    Bvec <- fullSeries[ (fullSeries >= A) & (fullSeries <= rmax-A) ]
-                    if(length(Bvec)>0) {
-                        res <- data.frame(A=rep(NA,length(Bvec)*2), B=NA, C=NA,
-                                          r=NA, total=NA,
-                                          mode="", stringsAsFactors = FALSE)
-                        i <- 1
-                        for(B in Bvec) {
-                            if( ( A + B <= rmax) && (A + B >= rmin) ) {
-                                if(tst(A/(A+B))) {
-                                    res$A[i] <- A; res$B[i] <- B
-                                    res$r[i] <- A/(A+B); res$total[i] <- A+B
-                                    res$mode[i] = "B--A"
-                                    i <- i+1
-                                }
-                                if(tst(B/(A+B))) {
-                                    res$A[i] <- A; res$B[i] <- B
-                                    res$r[i] <- B/(A+B); res$total[i] <- A+B
-                                    res$mode[i] = "A--B"
-                                    i <- i+1
-                                }
+        myapply(
+            fullSeries[(fullSeries >= rmin) & (fullSeries <= rmax)],
+            function(A) {
+                Bvec <- fullSeries[(fullSeries >= A) & (fullSeries <= rmax - A)]
+                if (length(Bvec) > 0) {
+                    res <- data.frame(
+                        A = rep(NA, length(Bvec) * 2), B = NA, C = NA,
+                        r = NA, total = NA,
+                        mode = "", stringsAsFactors = FALSE
+                    )
+                    i <- 1
+                    for (B in Bvec) {
+                        if ((A + B <= rmax) && (A + B >= rmin)) {
+                            if (tst(A / (A + B))) {
+                                res$A[i] <- A
+                                res$B[i] <- B
+                                res$r[i] <- A / (A + B)
+                                res$total[i] <- A + B
+                                res$mode[i] <- "B--A"
+                                i <- i + 1
+                            }
+                            if (tst(B / (A + B))) {
+                                res$A[i] <- A
+                                res$B[i] <- B
+                                res$r[i] <- B / (A + B)
+                                res$total[i] <- A + B
+                                res$mode[i] <- "A--B"
+                                i <- i + 1
                             }
                         }
-                        res[is.finite(res$A),]
-                    } else
-                        NULL
-
-                })
-    res <- do.call("rbind",res)
-
+                    }
+                    res[is.finite(res$A), ]
+                } else {
+                    NULL
+                }
+            }
+        )
+    res <- do.call("rbind", res)
 
     ## 3-resistor combinations
-    if(n==3) {
+    if (n == 3) {
         res.p <- myapply(
-            fullSeries [ fullSeries <= rmax ],
+            fullSeries[fullSeries <= rmax],
             function(C) {
                 imax <- 0
                 istep <- 1000
                 res <- data.frame(stringsAsFactors = FALSE)
                 i <- 1
-                for(A in fullSeries) {
-                    for(B in fullSeries) {
-                        if(i >= imax) {
-                            res <- rbind(res,
-                                         data.frame(A=rep(NA,istep),
-                                                    B=NA,
-                                                    C=NA,
-                                                    r=NA,
-                                                    total=NA,
-                                                    mode="",
-                                                    stringsAsFactors = FALSE))
+                for (A in fullSeries) {
+                    for (B in fullSeries) {
+                        if (i >= imax) {
+                            res <- rbind(
+                                res,
+                                data.frame(
+                                    A = rep(NA, istep),
+                                    B = NA,
+                                    C = NA,
+                                    r = NA,
+                                    total = NA,
+                                    mode = "",
+                                    stringsAsFactors = FALSE
+                                )
+                            )
                             imax <- imax + istep
                         }
-                        AB <- 1 / ( 1/A + 1/B )
-                        if(A+B+C >= rmin && A+B+C <= rmax) {
-                            tmp <- (B+C) / (A+B+C)
-                            if(tst(tmp)) {
-                                res$A[i] <- A; res$B[i] <- B; res$C[i] <- C
-                                res$r[i] <- tmp; res$total[i] <- A+B+C
+                        AB <- 1 / (1 / A + 1 / B)
+                        if (A + B + C >= rmin && A + B + C <= rmax) {
+                            tmp <- (B + C) / (A + B + C)
+                            if (tst(tmp)) {
+                                res$A[i] <- A
+                                res$B[i] <- B
+                                res$C[i] <- C
+                                res$r[i] <- tmp
+                                res$total[i] <- A + B + C
                                 res$mode[i] <- "A--(B+C)"
-                                i <- i+1
+                                i <- i + 1
                             }
-                            tmp <- (C) / (A+B+C)
-                            if(tst(tmp)) {
-                                res$A[i] <- A; res$B[i] <- B; res$C[i] <- C
-                                res$r[i] <- tmp; res$total[i] <- A+B+C
+                            tmp <- (C) / (A + B + C)
+                            if (tst(tmp)) {
+                                res$A[i] <- A
+                                res$B[i] <- B
+                                res$C[i] <- C
+                                res$r[i] <- tmp
+                                res$total[i] <- A + B + C
                                 res$mode[i] <- "(A+B)--C"
-                                i <- i+1
-                           }
-                        }
-                        if(AB+C >= rmin && AB+C <= rmax) {
-                            tmp <- (C) / (AB+C);
-                            if(tst(tmp)) {
-                                res$A[i] <- A; res$B[i] <- B; res$C[i] <- C
-                                res$r[i] <- tmp; res$total[i] <- AB+C
-                                res$mode[i] <- "(A||B)--C"
-                                i <- i+1
+                                i <- i + 1
                             }
-                            tmp <- (AB) / (AB+C)
-                            if(tst(tmp)) {
-                                res$A[i] <- A; res$B[i] <- B; res$C[i] <- C
-                                res$r[i] <- tmp; res$total[i] <- AB+C
+                        }
+                        if (AB + C >= rmin && AB + C <= rmax) {
+                            tmp <- (C) / (AB + C)
+                            if (tst(tmp)) {
+                                res$A[i] <- A
+                                res$B[i] <- B
+                                res$C[i] <- C
+                                res$r[i] <- tmp
+                                res$total[i] <- AB + C
+                                res$mode[i] <- "(A||B)--C"
+                                i <- i + 1
+                            }
+                            tmp <- (AB) / (AB + C)
+                            if (tst(tmp)) {
+                                res$A[i] <- A
+                                res$B[i] <- B
+                                res$C[i] <- C
+                                res$r[i] <- tmp
+                                res$total[i] <- AB + C
                                 res$mode[i] <- "C--(A||B)"
-                                i <- i+1
+                                i <- i + 1
                             }
                         }
                     }
                 }
-                res[ is.finite(res$A), ]
+                res[is.finite(res$A), ]
             }
         )
-        res.p <- do.call("rbind",res.p)
+        res.p <- do.call("rbind", res.p)
 
         ## eliminate duplicates
-        idx <- rep(TRUE,nrow(res.p)) # true = keep
+        idx <- rep(TRUE, nrow(res.p)) # true = keep
         to.check <- idx
 
-        bc.ser <- grepl("(B+C)",res.p$mode,fixed=TRUE)
-        ab.par <- grepl("(A||B)",res.p$mode,fixed=TRUE)
-        ab.ser <- grepl("(A+B)",res.p$mode,fixed=TRUE)
+        bc.ser <- grepl("(B+C)", res.p$mode, fixed = TRUE)
+        ab.par <- grepl("(A||B)", res.p$mode, fixed = TRUE)
+        ab.ser <- grepl("(A+B)", res.p$mode, fixed = TRUE)
 
-        if(nrow(res.p)>1)
-            for(i in 1:(nrow(res.p)-1)) {
-                if(idx[i]) {
+        if (nrow(res.p) > 1) {
+            for (i in 1:(nrow(res.p) - 1)) {
+                if (idx[i]) {
                     to.check[i] <- FALSE
 
                     ra <- res.p$A[i]
                     rb <- res.p$B[i]
                     rc <- res.p$C[i]
 
-                    if(ab.ser[i])
-                        idx[ to.check & ab.ser & ( (ra == res.p$A & rb == res.p$B) | (ra == res.p$B & rb == res.p$A) ) ] <- FALSE
-                    if(ab.par[i])
-                        idx[ to.check & ab.par & ( (ra == res.p$A & rb == res.p$B) | (ra == res.p$B & rb == res.p$A) ) ] <- FALSE
-                    if(bc.ser[i])
-                        idx[ to.check & bc.ser & ( (rc == res.p$C & rb == res.p$B) | (rc == res.p$B & rb == res.p$C) ) ] <- FALSE
+                    if (ab.ser[i]) {
+                        idx[to.check & ab.ser & ((ra == res.p$A & rb == res.p$B) | (ra == res.p$B & rb == res.p$A))] <- FALSE
+                    }
+                    if (ab.par[i]) {
+                        idx[to.check & ab.par & ((ra == res.p$A & rb == res.p$B) | (ra == res.p$B & rb == res.p$A))] <- FALSE
+                    }
+                    if (bc.ser[i]) {
+                        idx[to.check & bc.ser & ((rc == res.p$C & rb == res.p$B) | (rc == res.p$B & rb == res.p$C))] <- FALSE
+                    }
                 }
-
             }
-        res.p <- res.p[idx,]
+        }
+        res.p <- res.p[idx, ]
         res <- rbind(res, res.p)
     } # if(n==3)
 
-    res$dev <- 100 * (res$r / ratio - 1);
-    res<-res[(order(abs(res$dev))),]
-    res$dev<-sprintf("%5.2f%%",res$dev);
-    rownames(res)<-NULL;
+    res$dev <- 100 * (res$r / ratio - 1)
+    res <- res[(order(abs(res$dev))), ]
+    res$dev <- sprintf("%5.2f%%", res$dev)
+    rownames(res) <- NULL
 
-    cat( "****************** Best solutions with 2 resistors *****************\n");
-    tmp<-res[is.na(res$C),];
-    if(nrow(tmp)>ntop)
-        tmp<-tmp[1:ntop,]
-    rownames(tmp)<-NULL;
-    if(nrow(tmp)==0)
+    cat( "****************** Best solutions with 2 resistors *****************\n")
+    tmp <- res[is.na(res$C), ]
+    if (nrow(tmp) > ntop) tmp <- tmp[1:ntop, ]
+    rownames(tmp) <- NULL
+    if (nrow(tmp) == 0)
         cat("-- none --\n")
     else
-        print(tmp[,!grepl("^C$",names(tmp))])
+        print(tmp[, !grepl("^C$", names(tmp))])
 
-    if(n==3) {
-        cat("\n***************** Best solutions with 3 resistors *****************\n");
-        tmp<-res[is.finite(res$C),];
-        if(nrow(tmp)>ntop)
-            tmp<-tmp[1:ntop,]
-        rownames(tmp)<-NULL;
-        if(nrow(tmp)==0)
+    if (n == 3) {
+        cat("\n***************** Best solutions with 3 resistors *****************\n")
+        tmp <- res[is.finite(res$C), ]
+        if (nrow(tmp) > ntop)
+            tmp <- tmp[1:ntop, ]
+
+        rownames(tmp) <- NULL
+        if (nrow(tmp) == 0)
             cat("-- none --\n")
         else
             print(tmp)
     }
-    invisible(res);
+    invisible(res)
 }

@@ -1,10 +1,12 @@
 #' @rdname gfx2D-class
 #' @title gfx2D class and initialization
 #'
+#' @description
 #' The class \code{gfx2D} is used for plotting, applying to all
 #' drawing operations a geometric (2D-affine) transformation that is
 #' stored as $3 x 3$ matrix.
 #'
+#' @details
 #' The function \code{gfx2D} creates an object of this class and
 #' initializes its transformation matrix. The transformation
 #' operations can be passed as arguments (scaling: \code{sx},

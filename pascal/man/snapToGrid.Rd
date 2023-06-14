@@ -13,7 +13,8 @@ snapToGrid(d, theta = 0, sz = 1, which = "points")
 
 \item{sz}{estimate of grid spacing (default 1)}
 
-\item{which}{specify which results to return. Can be either "points" or "all".}
+\item{which}{specify which results to return. Can be either
+"points" or "all".}
 }
 \value{
 list with transformed points (which == "points"), or list
@@ -21,8 +22,8 @@ list with transformed points (which == "points"), or list
     (which == "all")
 }
 \description{
-Applies a 2D affine transformation to a set of points (x,y) so that these
-are places on an orthogonal grid with unit spacing.
+Applies a 2D affine transformation to a set of points (x,y) so that
+these are places on an orthogonal grid with unit spacing.
 }
 \details{
 An optimal combination of rotation, translation, and scaling is
@@ -50,7 +51,7 @@ d2 <- snapToGrid(d,theta=0,sz=1.4)
 par(mfrow=c(1,2))
 plot(d$x,d$y,asp=1,main="original")
 plot(d2$x,d2$y,asp=1, main="adjusted")
-for(i in 0:5) { abline(h=i,col="gray"); abline(v=i, col="gray") } 
+for(i in 0:5) { abline(h=i,col="gray"); abline(v=i, col="gray") }
 }
 \author{
 Pascal Niklaus \email{pascal.niklaus@ieu.uzh.ch}

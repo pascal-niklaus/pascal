@@ -42,20 +42,27 @@
 #' #' }
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-pwr10label <- function(x, ndec=1, exp=floor(log10(abs(x))), expOnly=FALSE) {
+pwr10label <- function(x,
+                       ndec = 1,
+                       exp = floor(log10(abs(x))),
+                       expOnly = FALSE) {
     n <- length(x)
     stopifnot(length(exp) %in% c(1, n))
-    exp <- rep(exp, n/length(exp))
+    exp <- rep(exp, n / length(exp))
 
     res <- vector("expression", n)
     for (i in 1:n) {
         if (expOnly)
-            res[i] <- substitute(expression(10^{e}),
-                                 list(e=exp[i]))[2]
+            res[i] <- substitute(
+                expression(10^{e}),
+                list(e = exp[i])
+            )[2]
         else
-            res[i] <- substitute(expression(x%.%10^{e}),
-                                 list(x=sprintf("%.*f", ndec, x[i]/10^exp[i]),
-                                      e=exp[i]))[2]
+            res[i] <- substitute(
+                expression(x %.% 10^{e}),
+                list(x = sprintf("%.*f", ndec, x[i] / 10^exp[i]),
+                     e = exp[i])
+            )[2]
     }
     res
 }

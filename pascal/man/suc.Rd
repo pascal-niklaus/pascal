@@ -10,13 +10,17 @@ suc(x)
 \item{x}{Data vector, typically a factor}
 }
 \description{
-This is a convenience function that returns the realised levels of a factor, as character strings, in ascending order.
+This is a convenience function that returns the realised levels of
+a factor, as character strings, in ascending order.
 }
 \details{
-Basically, I often used loops of the form \code{for(a in sort(unique(as.character(some_factor)))) {...}},
-which I found rather painful to write. This can now be abbreviated as \code{for(a in suc(some_factor)) {...}}.
-Note that the result is different from \code{levels{some_factor}}, since levels returns all possible levels
-a factor can take, even if there are no corresponding values in the vector (e.g. due to subsetting).
+Basically, I often used loops of the form \code{for(a in
+sort(unique(as.character(some_factor)))) {...}}, which I found
+rather painful to write. This can now be abbreviated as \code{for(a
+in suc(some_factor)) {...}}.  Note that the result is different
+from \code{levels{some_factor}}, since levels returns all possible
+levels a factor can take, even if there are no corresponding values
+in the vector (e.g. due to subsetting).
 }
 \examples{
 data(CO2, package="datasets")

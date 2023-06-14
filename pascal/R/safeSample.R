@@ -10,12 +10,17 @@
 #' @param x a vector of one or more elements from which to
 #'     choose. Unlike \code{base::sample}, \code{x} is also
 #'     interpreted as vector if it is of numeric type.
+#'
 #' @param size a non-negative integer giving the number of items to
 #'     choose.
+#'
 #' @param replace should sampling be with replacement?
+#'
 #' @param prob a vector of probability weights for obtaining the
 #'     elements of the vector being sampled.
+#'
 #' @seealso \code{\link{sample}}
+#'
 #' @examples
 #' ## these are the same:
 #' x <- 1:10
@@ -28,12 +33,12 @@
 #' safeSample(x, 1) # will return the value 10
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-safeSample <- function(x, size, replace = FALSE, prob = NULL)
-{
-    if(length(x)>1)
+safeSample <- function(x, size, replace = FALSE, prob = NULL) {
+    if (length(x) > 1) {
         base::sample(x, size, replace, prob)
-    else if(size==1 || replace)
+    } else if (size == 1 || replace) {
         rep(x, size)
-    else
+    } else {
         stop("Error in safeSample: size>n and replace==FALSE")
+    }
 }

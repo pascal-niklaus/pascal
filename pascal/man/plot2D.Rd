@@ -10,6 +10,10 @@
 \alias{arrows2D}
 \alias{arrows2D-methods}
 \alias{arrows2D,gfx2D,ANY-method}
+\alias{segments2D,gfx2D-method}
+\alias{segments2D}
+\alias{segments2D-methods}
+\alias{segments2D,gfx2D,ANY-method}
 \alias{rect2D,gfx2D-method}
 \alias{rect2D}
 \alias{rect2D,gfx2D,ANY-method}
@@ -41,12 +45,14 @@
 
 \S4method{arrows2D}{gfx2D}(object, x0, y0, x1 = x0, y1 = y0, length = 0.25, ...)
 
+\S4method{segments2D}{gfx2D}(object, x0, y0, x1 = x0, y1 = y0, ...)
+
 \S4method{rect2D}{gfx2D}(
   object,
   xleft,
   ybottom,
-  xright,
-  ytop,
+  xright = NULL,
+  ytop = NULL,
   density = NULL,
   angle = 45,
   col = NA,

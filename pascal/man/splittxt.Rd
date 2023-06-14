@@ -7,14 +7,15 @@
 splittxt(x, n = 80)
 }
 \arguments{
-\item{x}{Text string to wrap. Can also be a list or vector, in which case
-the result is a list of vectors with the wrapped parts.}
+\item{x}{Text string to wrap. Can also be a list or vector, in
+which case the result is a list of vectors with the wrapped
+parts.}
 
 \item{n}{Width of the result in characters (defaults to 80)}
 }
 \value{
-Vector with text split into parts of size n, or a list of vectors
-if several arguments were passed.
+Vector with text split into parts of size n, or a list of
+    vectors if several arguments were passed.
 }
 \description{
 \code{splittxt} splits a given text string into parts of a given length,
@@ -22,33 +23,9 @@ ignoring word boundaries, whitespace etc. It was originally written to
 wrap DNA sequences to a certain line width.
 }
 \details{
-The \code{factors} defining the grouping are given as character
-string and can be given new names in the aggregated data set. For
-example, \code{factors=c("f1=factor1","f2=factor2")} will rename
-the factors \code{factor1} and \code{factor2} to \code{f1} and
-\code{f2}.  If no new name is given, the original is kept.
-
-The summary column defined in \code{newcols} is passed as character
-vector with the form
-\code{new_name=summary_function(old_name)}. Any defined function
-taking a numeric vector as argument can be used.  For example,
-\code{newcols=c("m.tot=sum(m)","m.avg=mean(m)","n=length(m)")} will
-compute the sum, average and number of data in \code{m} for all
-factor combinations and return them under the names \code{m.tot},
-\code{m.avg} and \code{n}.  The R code given is not fully parsed;
-instead, any name enclosed in parenthesis (without whitespace) is
-treated as column name (textual replacement).  This allows for
-terms such as \code{newcols=c("m.tot=sum((m),na.rm=T)")}.  As a
-trade-off, \code{newcols=c("m.tot=sum(( m ),na.rm=T)")} will not
-work because there is whitespace around the variable name
-\code{m}. This can be used to distinguish between column names and
-other variables defined in the scope in which \code{aggr} is
-executed.
-
-If the package \code{parallel} is installed, some computations are
-parallelized on platforms other than Windows, using all available
-processor cores.  However, the performance gain is small
-for simple summary functions.
+The parameter \code{n} indicated the width of the output. If
+\code{x} has length > 1 (e.g. is a list), then a list is returned
+with each element of \code{x} split separately.
 }
 \examples{
 splittxt(paste(LETTERS[1:26],collapse=""),10)

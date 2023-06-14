@@ -46,50 +46,54 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @rdname progress
 #' @export
-progressInit <- function(steps=10, pre="[", post="]", done="*", spc="-", maxwidth=60)
-{
+progressInit <- function(steps = 10,
+                         pre = "[",
+                         post = "]",
+                         done = "*",
+                         spc = "-",
+                         maxwidth = 60) {
     .progressInit()
 
-    if(!is.null(dim(steps)))
+    if (!is.null(dim(steps)))
         steps <- dim(steps)[1]
-    else if(length(steps)>1)
+    else if (length(steps) > 1)
         steps <- length(steps)
 
-    div <- ceiling(steps/maxwidth)
-    nbar <- ceiling(steps/div)
+    div <- ceiling(steps / maxwidth)
+    nbar <- ceiling(steps / div)
 
-    .localstuff$progress <- list(steps=steps,
-                                 nbar=nbar,
-                                 div=div,
-                                 pre=pre,
-                                 post=post,
-                                 done=done,
-                                 spc=spc)
+    .localstuff$progress <- list(
+        steps = steps,
+        nbar = nbar,
+        div = div,
+        pre = pre,
+        post = post,
+        done = done,
+        spc = spc
+    )
 }
-
 #' @rdname progress
 #' @export
-progressBar <- function(step=0)
-{
-    if(.localstuff$sinkOn)
+progressBar <- function(step = 0) {
+    if (.localstuff$sinkOn)
         return
     with(.localstuff$progress, {
-        stp <- floor(step/div)
+        stp <- floor(step / div)
         cat(pre,
-            paste(rep(done, stp), collapse=''),
-            paste(rep(spc, nbar-stp), collapse=''),
+            paste(rep(done, stp), collapse = ""),
+            paste(rep(spc, nbar - stp), collapse = ""),
             post,
             "\r",
-            sep="")
+            sep = ""
+        )
     })
-    if(.localstuff$progress$steps == step)
+    if (.localstuff$progress$steps == step)
         cat("\n")
 }
 
 #' @rdname progress
 #' @export
-progressStep0 <- function()
-{
+progressStep0 <- function() {
     .progressSetCounter(0)
     progressBar(0)
     cat(.localstuff$progress$pre)
@@ -97,28 +101,26 @@ progressStep0 <- function()
 
 #' @rdname progress
 #' @export
-progressStep <- function()
-{
+progressStep <- function() {
     stp <- .progressIncCounter()
-    if(.localstuff$sinkOn)
+    if (.localstuff$sinkOn)
         return
-    if(stp %% .localstuff$progress$div == 0)
+    if (stp %% .localstuff$progress$div == 0)
         cat(.localstuff$progress$done)
-    if(stp == .localstuff$progress$steps)
-        cat(.localstuff$progress$post,"\n")
+    if (stp == .localstuff$progress$steps)
+        cat(.localstuff$progress$post, "\n")
 }
 
 #' @rdname progress
 #' @export
-progressPct <- function(step=0)
-{
-    if(.localstuff$sinkOn)
+progressPct <- function(step = 0) {
+    if (.localstuff$sinkOn)
         return
     with(.localstuff$progress, {
-        pct <- sprintf("%3d%%",round(step/steps*100))
-    cat(pre,pct,post,"\r")
+        pct <- sprintf("%3d%%", round(step / steps * 100))
+    cat(pre, pct, post, "\r")
     })
-    if(.localstuff$progress$steps == step)
+    if (.localstuff$progress$steps == step)
         cat("\n")
 }
 
@@ -128,22 +130,23 @@ progressPct <- function(step=0)
 
 .progressInit <- function() {
     .localstuff$progress.do.lock <-
-        ( requireNamespace("synchronicity") && requireNamespace("bigmemory") )
+        (requireNamespace("synchronicity") &&
+         requireNamespace("bigmemory"))
 
-    if(.localstuff$progress.do.lock) {
-        .localstuff$progress.counter <- bigmemory::big.matrix(1,1)
-        .localstuff$progress.counter[1,1] <- 0
+    if (.localstuff$progress.do.lock) {
+        .localstuff$progress.counter <- bigmemory::big.matrix(1, 1)
+        .localstuff$progress.counter[1, 1] <- 0
         .localstuff$progress.mutex <- synchronicity::boost.mutex()
-    } else
+    } else {
         .localstuff$progress.counter <- 0
+    }
 }
 
-.progressIncCounter <- function()
-{
-    if(.localstuff$progress.do.lock) {
+.progressIncCounter <- function() {
+    if (.localstuff$progress.do.lock) {
         synchronicity::lock(.localstuff$progress.mutex)
-        n <- (.localstuff$progress.counter[1,1] <-
-                  .localstuff$progress.counter[1,1] + 1)
+        n <- (.localstuff$progress.counter[1, 1] <-
+                  .localstuff$progress.counter[1, 1] + 1)
         synchronicity::unlock(.localstuff$progress.mutex)
     } else {
         n <- (.localstuff$progress.counter <-
@@ -152,22 +155,20 @@ progressPct <- function(step=0)
     n
 }
 
-.progressSetCounter <- function(n)
-{
-    if(.localstuff$progress.do.lock) {
+.progressSetCounter <- function(n) {
+    if (.localstuff$progress.do.lock) {
         synchronicity::lock(.localstuff$progress.mutex)
-        .localstuff$progress.counter[1,1] <- n
+        .localstuff$progress.counter[1, 1] <- n
         synchronicity::unlock(.localstuff$progress.mutex)
     } else {
         .localstuff$progress.counter <- n
     }
 }
 
-.progressGetCounter <- function()
-{
-    if(.localstuff$progress.do.lock) {
+.progressGetCounter <- function() {
+    if (.localstuff$progress.do.lock) {
         synchronicity::lock(.localstuff$progress.mutex)
-        n <- .localstuff$progress.counter[1,1]
+        n <- .localstuff$progress.counter[1, 1]
         synchronicity::unlock(.localstuff$progress.mutex)
     } else {
         n <- .localstuff$progress.counter

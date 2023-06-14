@@ -9,9 +9,9 @@ emptyPlot(
   ylim = c(0, 1),
   asp = NA,
   xpd = NA,
+  bty = "n",
   xlab = "",
   ylab = "",
-  bty = "n",
   xaxs = "i",
   yaxs = "i",
   xaxt = "n",
@@ -26,9 +26,9 @@ emptyPlot(
 
 \item{xpd}{Defauts to NA. Check `?par` for details.}
 
-\item{xlab, ylab}{axis labels (default: empty)}
-
 \item{bty}{box type. Defaults to none ('n'; see `?par` for details)}
+
+\item{xlab, ylab}{axis labels (default: empty)}
 
 \item{xaxs, yaxs, xaxt, yaxt}{axes characteristics. Defaults to 'i'
 and 'n'. See `?par` for details.}

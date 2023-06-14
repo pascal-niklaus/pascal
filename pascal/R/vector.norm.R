@@ -12,8 +12,11 @@
 #' slower.
 #'  
 #' @param x input vector, or list of vectors 
-#' @param p type of norm (default 2) 
+#'
+#' @param p type of norm (default 2)
+#'
 #' @return norm of vector, or vector with norms of vectors passed in list
+#'
 #' @examples
 #' a <- c(1,2,3)
 #' d <- list(a,c(2,3,4,5,6))
@@ -25,9 +28,9 @@
 #' @keywords misc, utilities
 #' @seealso norm
 #' @export    
-vector.norm <- function(x, p=2) {
-    if(is.list(x))
-        sapply(x,function(x) sum(x^p)^(1/p))
+vector.norm <- function(x, p = 2) {
+    if (is.list(x))
+        sapply(x, function(x) sum(x^p)^(1 / p))
     else
-        sum(x^p)^(1/p)
+        sum(x^p)^(1 / p)
 }

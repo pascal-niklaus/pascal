@@ -19,11 +19,12 @@
 #' se(c(1:5,NA),na.rm=TRUE)
 #' ## [1] 0.7071068
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
-#' @export    
 #' @keywords utilities, misc
-se <- function(x,na.rm=FALSE) {
-  if(na.rm)
-    return(sd(x[!is.na(x)])/sqrt(length(x[!is.na(x)])))
-  else
-    return(sd(x)/sqrt(length(x))); 
+#' @export
+se <- function(x, na.rm = FALSE) {
+    if (na.rm) {
+        return(sd(x[!is.na(x)]) / sqrt(length(x[!is.na(x)])))
+    } else {
+        return(sd(x) / sqrt(length(x)))
+    }
 }

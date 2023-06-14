@@ -25,7 +25,7 @@
 #' @author MrFlick \url{https://github.com/MrFlick}, copied by Pascal
 #'     Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-rxmatches <- function(x,m) {
+rxmatches <- function(x, m) {
     if (length(x) != length(m))
         stop(gettextf("%s and %s must have the same length",
                       sQuote("x"), sQuote("m")), domain = NA)
@@ -42,18 +42,18 @@ rxmatches <- function(x,m) {
             Encoding(x[ind]) <- "bytes"
     }
     if (ili) {
-        if (any(sapply(m, function(x) {is.null(attr(x,"capture.start"))})==T)) {
+        if (any(sapply(m, function(x) is.null(attr(x, "capture.start"))))) {
             stop("No capture data found (did you use perl=T?)")
         }
-        starts<-lapply(m, function(x) {attr(x, "capture.start")})
-        lengths<-lapply(m, function(x) {attr(x, "capture.length")})
+        starts <- lapply(m, function(x) attr(x, "capture.start"))
+        lengths <- lapply(m, function(x) attr(x, "capture.length"))
     } else {
-        if (is.null(attr(m,"capture.start"))) {
+        if (is.null(attr(m, "capture.start"))) {
             stop("No capture data found (did you use perl=T?)")
         }
-        x<-list(x)
-        starts<-list(attr(m, "capture.start"))
-        lengths<-list(attr(m, "capture.length"))
+        x <- list(x)
+        starts <- list(attr(m, "capture.start"))
+        lengths <- list(attr(m, "capture.length"))
     }
 
     cleannames <- function(x) {
@@ -62,29 +62,33 @@ rxmatches <- function(x,m) {
         }
         x
     }
+
     starts <- lapply(starts, cleannames)
     lengths <- lapply(lengths, cleannames)
 
-    Substring<-function(x,starts,lens) {
-        if(all(starts<0)) {
+    Substring <- function(x, starts, lens) {
+        if (all(starts < 0)) {
             return()
         } else {
             x <- t(
-                mapply(function(x,st,ln) ifelse(st<0,NA,substring(x,st,st+ln-1)),
-                       x, data.frame(t(starts)), data.frame(t(lens)),
-                       USE.NAMES=FALSE)
+                mapply(
+                    function(x, st, ln) {
+                        ifelse(st < 0, NA, substring(x, st, st + ln - 1))
+                    },
+                    x,
+                    data.frame(t(starts)), data.frame(t(lens)),
+                    USE.NAMES = FALSE
+                )
             )
             if (!is.null(colnames(starts))) {
-                colnames(x)<-colnames(starts)
+                colnames(x) <- colnames(starts)
             }
             x
         }
     }
 
-    y<-Map(
-        function(x, sos, mls) {
-            Substring(x,sos,mls)
-        },
+    y <- Map(
+        function(x, sos, mls) Substring(x,sos,mls),
         x,
         starts,
         lengths,

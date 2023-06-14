@@ -7,17 +7,21 @@
 safen(x)
 }
 \arguments{
-\item{x}{A vector, list or matrix containing character or numeric data, possibly as factor.}
+\item{x}{A vector, list or matrix containing character or numeric
+data, possibly as factor.}
 }
 \value{
-A numeric vector, list or matrix containing the converted data.
+A numeric vector, list or matrix containing the converted
+    data.
 }
 \description{
-\code{safen} will return the numeric representation of data stored in a vector, list, or matrix.
-Numeric data are preserved, character data are converted to numeric.
-Factors are first converted to character and then to numeric, thus avoiding returning 
-data that reflects factor levels \code{1,2,3,...} rather than
-the numeric value represented by the character string coding for the level.
+\code{safen} will return the numeric representation of data stored
+in a vector, list, or matrix.  Numeric data are preserved,
+character data are converted to numeric.  Factors are first
+converted to character and then to numeric, thus avoiding returning
+data that reflects factor levels \code{1,2,3,...} rather than the
+numeric value represented by the character string coding for the
+level.
 }
 \examples{
 library(pascal)

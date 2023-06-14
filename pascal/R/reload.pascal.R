@@ -6,8 +6,7 @@
 #' 
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-reload.pascal <- function()
-{
-    detach(package:pascal,unload=TRUE)
+reload.pascal <- function() {
+    detach(package:pascal, unload = TRUE)
     library(pascal)
 }

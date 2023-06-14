@@ -40,84 +40,82 @@
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @rdname pwrposneg
 #' @export  
-power.posneg <- function(x,posexp=.5,negexp=.5,slope=1)
-{
-  if(posexp=="log") {
-    posalpha=1/slope;
-    posyoffset <- log(posalpha);  
-  } else {
-    posalpha <- (slope/posexp)^(1/(posexp-1)); 
-    posyoffset <- posalpha^posexp;  
-  }
-  
-  if(negexp=="log") {
-    negalpha=1/slope;
-    negyoffset <- log(negalpha);    
-  } else {  
-    negalpha <- (slope/negexp)^(1/(negexp-1)); 
-    negyoffset <- negalpha^negexp;
-  }
-  
-  sapply(x, 
-         function(x) {
-          if(is.na(x)) {
-            NA
-          } else if(x<0) {
-            if(negexp=="log") {
-              -(log(-x+negalpha)-negyoffset);
+power.posneg <- function(x, posexp = .5,negexp = .5,slope = 1) {
+    if (posexp == "log") {
+        posalpha <- 1 / slope
+        posyoffset <- log(posalpha)
+    } else {
+        posalpha <- (slope / posexp)^(1 / (posexp - 1))
+        posyoffset <- posalpha^posexp
+    }
+
+    if (negexp == "log") {
+        negalpha <- 1 / slope
+        negyoffset <- log(negalpha)
+    } else {
+        negalpha <- (slope / negexp)^(1 / (negexp - 1))
+        negyoffset <- negalpha^negexp
+    }
+
+    sapply(
+        x,
+        function(x) {
+            if (is.na(x)) {
+                NA
+            } else if (x < 0) {
+                if (negexp == "log") {
+                    -(log(-x + negalpha) - negyoffset)
+                } else {
+                    -((-x + negalpha)^negexp - negyoffset)
+                }
             } else {
-              -((-x+negalpha)^negexp-negyoffset);
+                if (posexp == "log") {
+                    log(x + posalpha) - posyoffset
+                } else {
+                    ((x + posalpha)^posexp - posyoffset)
+                }
             }
-          }
-          else {
-            if(posexp=="log") {
-              log(x+posalpha)-posyoffset;
-            } else {
-              ((x+posalpha)^posexp-posyoffset)
-            }          
-          }            
-        } 
-  )
+        }
+    )
 }
 
 #' @rdname pwrposneg
-#' @export  
-power.posneg.backtransform <- function(x,posexp=.5,negexp=.5,slope=1)
-{
-  if(posexp=="log") {
-    posalpha=1/slope;
-    posyoffset <- log(posalpha);  
-  } else {
-    posalpha <- (slope/posexp)^(1/(posexp-1)); 
-    posyoffset <- posalpha^posexp;  
-  }
-  
-  if(negexp=="log") {
-    negalpha=1/slope;
-    negyoffset <- log(negalpha);    
-  } else {  
-    negalpha <- (slope/negexp)^(1/(negexp-1)); 
-    negyoffset <- negalpha^negexp;
-  }
-  
-  sapply(x, 
-         function(x) {
-          if(is.na(x)) {
-            NA
-          } else if(x<0) {
-            if(negexp=="log") {
-              negalpha-exp(negyoffset-x); #-(log(-x+negalpha)-negyoffset);
+#' @export
+power.posneg.backtransform <- function(x, posexp = .5, negexp = .5, slope = 1) {
+    if (posexp == "log") {
+        posalpha <- 1 / slope
+        posyoffset <- log(posalpha)
+    } else {
+        posalpha <- (slope / posexp)^(1 / (posexp - 1))
+        posyoffset <- posalpha^posexp
+    }
+
+    if (negexp == "log") {
+        negalpha <- 1 / slope
+        negyoffset <- log(negalpha)
+    } else {
+        negalpha <- (slope / negexp)^(1 / (negexp - 1))
+        negyoffset <- negalpha^negexp
+    }
+
+    sapply(
+        x,
+        function(x) {
+            if (is.na(x)) {
+                NA
+            } else if (x < 0) {
+                if (negexp == "log") {
+                    negalpha - exp(negyoffset - x)
+                } else {
+                    negalpha - (negyoffset - x)^(1 / negexp)
+                }
             } else {
-              negalpha-(negyoffset-x)^(1/negexp); # -((-x+negalpha)^negexp-negyoffset);
+                if (posexp == "log") {
+                    exp(posyoffset + x) - posalpha
+                } else {
+                    (x + posyoffset)^(1 / posexp) - posalpha
+                }
             }
-          }
-          else {
-            if(posexp=="log") {
-              exp(posyoffset+x)-posalpha; # log(x+posalpha)-posyoffset;
-            } else {
-              (x+posyoffset)^(1/posexp)-posalpha; # ((x+posalpha)^posexp-posyoffset)
-            }          
-          }            
-        } 
-  )
+        }
+    )
 }

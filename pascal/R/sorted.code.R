@@ -35,30 +35,29 @@
 #' sorted.code(list(c("a","b","c"),c("z","y")),collapse="-")    # case 4
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-sorted.code <- function(...,split=NULL,collapse=NULL, unique=FALSE)
-{
+sorted.code <- function(..., split = NULL, collapse = NULL, unique = FALSE) {
     p <- list(...)
-    if(is.list(p[[1]])) {
+    if (is.list(p[[1]])) {
         p <- p[[1]]
     } else {
-        if(is.matrix(p[[1]]))
+        if (is.matrix(p[[1]]))
             p <- p[[1]]
         else
-            p <- matrix(unlist(p),nrow=length(p[[1]]))
-        if(!is.null(split))
-            if(ncol(p)>1)
+            p <- matrix(unlist(p), nrow = length(p[[1]]))
+        if (!is.null(split))
+            if (ncol(p) > 1)
                 stop("split specified call in multiple column form")
             else
-                p <- strsplit(p,split,fixed=TRUE)
+                p <- strsplit(p, split, fixed = TRUE)
     }
-    if(is.null(collapse))
-        if(is.null(split))
+    if (is.null(collapse))
+        if (is.null(split))
             stop("collapse not specified")
         else
             collapse <- split
     uq <- if (unique) base::unique else I
-    if(is.list(p))
-        sapply(p,function(x) paste(sort(uq(x)),collapse=collapse) )
+    if (is.list(p))
+        sapply(p, function(x) paste(sort(uq(x)), collapse = collapse))
     else
-        apply(p,1,function(x) paste(sort(uq(x)),collapse=collapse) )
+        apply(p, 1, function(x) paste(sort(uq(x)), collapse = collapse))
 }

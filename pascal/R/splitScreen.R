@@ -45,45 +45,43 @@
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-splitScreen <- function(nx=2, ny=1,
-                        gapx=0, gapy=0,
-                        topy=0, bottomy=0.2,
-                        leftx=.2, rightx=0,
-                        byrow=TRUE, debug=FALSE,
-                        addLeft=FALSE,
-                        addRight=FALSE,
-                        addBottom=FALSE,
-                        addTop=FALSE)
-{
-    w <- (1-leftx-rightx-(nx-1)*gapx)/nx
-    h <- (1-topy-bottomy-(ny-1)*gapy)/ny
+splitScreen <- function(nx = 2, ny = 1,
+                        gapx = 0, gapy = 0,
+                        topy = 0, bottomy = 0.2,
+                        leftx = .2, rightx = 0,
+                        byrow = TRUE, debug = FALSE,
+                        addLeft = FALSE,
+                        addRight = FALSE,
+                        addBottom = FALSE,
+                        addTop = FALSE) {
+    w <- (1 - leftx - rightx - (nx - 1) * gapx) / nx
+    h <- (1 - topy - bottomy - (ny - 1) * gapy) / ny
 
-    m <- matrix(NA,nrow=nx*ny,ncol=4)
-    for(x in 1:nx) {
-        for(y in 1:ny) {
-            i <- if(byrow) x+(y-1)*nx else y+(x-1)*ny
-            m[i,] <- c(leftx+c(0,w)+(x-1)*(w+gapx),
-                       bottomy+c(0,h)+(y-1)*(h+gapy))
+    m <- matrix(NA, nrow = nx * ny, ncol = 4)
+    for (x in 1:nx) {
+        for (y in 1:ny) {
+            i <- if (byrow) x + (y - 1) * nx else y + (x - 1) * ny
+            m[i, ] <- c(leftx + c(0, w) + (x - 1) * (w + gapx),
+                       bottomy + c(0, h) + (y - 1) * (h + gapy))
         }
     }
 
-    left  <- min(m[,1])
-    right <- max(m[,2])
-    top <- max(m[,4])
-    bottom <- min(m[,3])
-    if(addLeft)
+    left  <- min(m[, 1])
+    right <- max(m[, 2])
+    top <- max(m[, 4])
+    bottom <- min(m[, 3])
+    if (addLeft)
         m <- rbind(m, c(0, left, bottom, top))
-    if(addRight)
+    if (addRight)
         m <- rbind(m, c(right, 1, bottom, top))
-    if(addBottom)
+    if (addBottom)
         m <- rbind(m, c(left, right, 0, bottom))
-    if(addTop)
+    if (addTop)
         m <- rbind(m, c(left, right, top, 1))
-    if(!debug)
+    if (!debug)
         split.screen(m)
     invisible(m)
 }
-
 
 #' Provides an empty plot
 #'
@@ -114,17 +112,17 @@ splitScreen <- function(nx=2, ny=1,
 #'
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-emptyPlot <- function(xlim=c(0,1),ylim=c(0,1),
-                     asp=NA, xpd=NA,
-                     xlab="",ylab="",bty="n",
-                     xaxs="i",yaxs="i",
-                     xaxt="n",yaxt="n",
+emptyPlot <- function(xlim = c(0, 1), ylim = c(0, 1),
+                     asp = NA, xpd = NA, bty = "n",
+                     xlab = "", ylab = "",
+                     xaxs = "i", yaxs = "i",
+                     xaxt = "n", yaxt = "n",
                      ...) {
     plot(NA, NA,
-         xlim=xlim, ylim=ylim,
-         asp=asp, xpd=xpd, bty=bty,
-         xlab=xlab, ylab=ylab,
-         xaxs=xaxs, yaxs=yaxs,
-         xaxt=xaxt, yaxt=yaxt,
+         xlim = xlim, ylim = ylim,
+         asp = asp, xpd = xpd, bty = bty,
+         xlab = xlab, ylab = ylab,
+         xaxs = xaxs, yaxs = yaxs,
+         xaxt = xaxt, yaxt = yaxt,
          ...)
 }
