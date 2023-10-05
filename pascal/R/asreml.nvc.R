@@ -10,10 +10,12 @@
 #' by modifying \code{gammas.table} in the \code{G.param} argument.
 #'
 #' @param ... All arguments that are to be passed to \code{asreml}.
-#' An optional vector \code{ginits} with initial values for
-#' \code{gamma} (units: scaled dispersion) can be provided, with
-#' values in the order in which the variance components are shown in
-#' the output of asreml.
+#'     An optional vector \code{ginits} with initial values for
+#'     \code{gamma} (units: scaled dispersion) can be provided, with
+#'     values in the order in which the variance components are shown
+#'     in the output of asreml. If only some variances components
+#'     should be unbound, then the constraints can be specified in the
+#'     optional vector \code{gconstraints}.
 #'
 #' @return An asreml object as would be returned if \code{asreml} was called directly
 #' @examples
@@ -65,20 +67,24 @@
 #' }
 #' @author Pascal Niklaus \email{pascal.niklaus@@ieu.uzh.ch}
 #' @export
-asreml.nvc <- function (...)
-{
-  m <- match.call();
-  m[[1]]<-as.name("asreml");
-  m$start.values <- TRUE;
-  gammas <- eval(m, parent.frame())
-  ## for compatibility with ASReml 3 and 4
-  gammas <- gammas[[which(names(gammas)%in%c("vparameters.table","gammas.table"))]]
-  gammas$Constraint<-'U';
-  if("ginits" %in% names(m)) {
-      gammas$Value <- eval(m$ginits)
-      m$ginits <- NULL
-  }
-  m$start.values <- NULL;
-  m$G.param<-gammas;
-  eval(m,parent.frame());
+asreml.nvc <- function(...) {
+    m <- match.call()
+    m[[1]] <- as.name("asreml")
+    m$start.values <- TRUE
+    gammas <- eval(m, parent.frame())
+    ## for compatibility with ASReml 3 and 4
+    gammas <- gammas[[which(names(gammas) %in% c("vparameters.table", "gammas.table"))]]
+    if ("gconstraints" %in% names(m)) {
+        gammas$Constraint <- eval(m$gconstraints)
+        m$gconstraints <- NULL
+    } else {
+        gammas$Constraint <- "U"
+    }
+    if ("ginits" %in% names(m)) {
+        gammas$Value <- eval(m$ginits)
+        m$ginits <- NULL
+    }
+    m$start.values <- NULL
+    m$G.param <- gammas
+    eval(m, parent.frame())
 }

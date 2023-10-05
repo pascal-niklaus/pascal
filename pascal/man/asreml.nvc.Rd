@@ -10,8 +10,10 @@ asreml.nvc(...)
 \item{...}{All arguments that are to be passed to \code{asreml}.
 An optional vector \code{ginits} with initial values for
 \code{gamma} (units: scaled dispersion) can be provided, with
-values in the order in which the variance components are shown in
-the output of asreml.}
+values in the order in which the variance components are shown
+in the output of asreml. If only some variances components
+should be unbound, then the constraints can be specified in the
+optional vector \code{gconstraints}.}
 }
 \value{
 An asreml object as would be returned if \code{asreml} was called directly
